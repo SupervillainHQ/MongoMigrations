@@ -1,0 +1,4 @@
+vagrant/.vagrant
+vendor
+composer.lock
+.idea/workspace.xml

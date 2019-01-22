@@ -1,0 +1,15 @@
+{
+	"name": "supervillainhq-mongomigrations",
+	"version": "0.0.1",
+	"description": "SupervillainHQ Mongo Migrations",
+	"repository": "bitbucket.org:andkrup/mongomigrations.git",
+	"license": "UNLICENSED",
+	"scripts": {
+		"install": "bash ./scripts/install.sh",
+		"build-phar": "php ./scripts/build-phar.php"
+	},
+	"devDependencies": {
+	},
+	"dependencies": {
+	}
+}

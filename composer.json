@@ -1,0 +1,30 @@
+{
+	"name" : "supervillainhq/mongomigrations",
+	"config" : {
+		"vendor-dir" : "vendor",
+		"secure-http" : false,
+		"cache-files-ttl": 0
+	},
+	"bin" : [
+		"bin/customers.phar"
+	],
+	"repositories": [],
+	"autoload": {
+		"psr-0": {
+			"": "src"
+		}
+	},
+	"require": {
+		"php" : "^7",
+		"ext-json" : "*",
+		"ext-mongodb" : "*",
+		"ext-phalcon" : "*",
+		"bugsnag/bugsnag": "^3.4",
+		"mongodb/mongodb": "^1.0",
+		"nategood/commando": "^0.3.0"
+	},
+	"require-dev":{
+		"phalcon/devtools": "^3",
+		"phpunit/phpunit": "^4.8"
+	}
+}
