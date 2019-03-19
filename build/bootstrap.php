@@ -27,7 +27,7 @@ $cmd = new NateGoodCommand();
 $cmd->option('v')
 	->aka('verbose')
 	->describedAs('When set, extended logging is enabled')
-	->boolean();
+	->count(3);
 
 $cmd->option('c')
 	->aka('command')
@@ -43,5 +43,5 @@ if($verbose){
 	echo "$vendorPath\n";
 }
 
-MongoMigrationsCliApplication::run("{$projectPath}/config/Config.xml", $cmd);
+MongoMigrationsCliApplication::run("{$projectPath}/config/config.json", $cmd);
 

@@ -2,3 +2,4 @@ vagrant/.vagrant
 vendor
 composer.lock
 .idea/workspace.xml
+config/auth.json

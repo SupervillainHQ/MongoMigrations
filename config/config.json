@@ -1,0 +1,9 @@
+{
+	"database" : "MM",
+	"authorization" : {
+		"file" : "./auth.json"
+	},
+	"migrations" : {
+		"path" : ""
+	}
+}

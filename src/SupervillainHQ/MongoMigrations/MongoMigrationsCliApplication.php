@@ -11,18 +11,18 @@ namespace SupervillainHQ\MongoMigrations {
 
 	use Commando\Command;
 	use Phalcon\Di\FactoryDefault\Cli as CliDI;
+	use SupervillainHQ\MongoMigrations\Config\Config;
 
 	class MongoMigrationsCliApplication {
 		static function run(string $configPath, Command $command){
 			$di = new CliDI();
-//			Config::setPath($configPath);
-//
-//			ResourceManager::setEnvironment(new ServerEnvironment());
-//
-//			DependencyLoader::loadCoreDependencies(null, $di);
-//
-//			$dependencies = Config::get('dependencies');
-//			DependencyLoader::loadFromConfig($dependencies, null, $di);
+			Config::load($configPath);
+
+			$migrationDir = Config::instance()->migrations->path;
+
+			if(!is_writable($migrationDir) || !is_dir($migrationDir)){
+				throw new \Exception("Invalid migration directory");
+			}
 
 			if (stripos(getenv("APP_ENV"), "prod")){
 				set_exception_handler(function (\Throwable $e) use ($di) {
@@ -67,8 +67,8 @@ namespace SupervillainHQ\MongoMigrations {
 				}
 				if(isset($cliCommand)){
 					$exitCode = $cliCommand->execute();
+					exit($exitCode);
 				}
-				exit;
 			}
 			throw new \Exception("No such command");
 		}

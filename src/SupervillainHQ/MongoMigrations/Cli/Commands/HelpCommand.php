@@ -13,8 +13,6 @@ namespace SupervillainHQ\MongoMigrations\Cli\Commands {
 
 	class HelpCommand implements CliCommand {
 
-		function __construct() {
-		}
 
 		function execute(): int {
 			echo "Mongo-migrations help:\n";
