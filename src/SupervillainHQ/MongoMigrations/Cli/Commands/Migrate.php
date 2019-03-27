@@ -11,11 +11,24 @@ namespace SupervillainHQ\MongoMigrations\Cli\Commands {
 
 	use SupervillainHQ\MongoMigrations\Cli\CliCommand;
 	use SupervillainHQ\MongoMigrations\Migrations\MigrationFile;
+	use SupervillainHQ\MongoMigrations\Migrations\MigrationLog;
+	use SupervillainHQ\MongoMigrations\Operations\ExecuteMigration;
 
 	class Migrate implements CliCommand {
 
 		function execute(): int {
-			$migrations = MigrationFile::listFiles();
+			$migrationFiles = MigrationFile::listFiles();
+			foreach ($migrationFiles as $migrationFile) {
+				if($migrationFile instanceof MigrationFile){
+					$op = new ExecuteMigration($migrationFile->collection());
+					// ExecuteMigration instances return false if the collection already exists. This will happen for all
+					// old files. Only new files will actually execute.
+					if($op->change()){
+						// If the migration returns true, the migration created a new collection, so we must add a log entry
+						MigrationLog::createEntry($migrationFile->fileName(), $migrationFile->collection());
+					}
+				}
+			}
 			return 0;
 		}
 

@@ -31,6 +31,10 @@ namespace SupervillainHQ\MongoMigrations\Migrations {
 			return $this->collection;
 		}
 
+		function fileName():string{
+			return $this->filename;
+		}
+
 		function saveAsMson(){
 			$migrationDir = MongoMigrationsCliApplication::migrationDir();
 			$fileName = "{$this->when->format('YmdHis')}-{$this->collection}";
@@ -53,10 +57,12 @@ namespace SupervillainHQ\MongoMigrations\Migrations {
 			$migrationFiles = [];
 			foreach ($files as $file) {
 				$ext = pathinfo($file, PATHINFO_EXTENSION);
+				$filename = pathinfo($file, PATHINFO_FILENAME);
 				if($ext == 'mson'){
 					$migrationFile = new MigrationFile();
 					$contents = file_get_contents("{$migrationDir}/{$file}");
 					self::inflate($migrationFile, json_decode($contents));
+					$migrationFile->filename = $filename;
 					array_push($migrationFiles, $migrationFile);
 					echo "{$file}\n";
 				}

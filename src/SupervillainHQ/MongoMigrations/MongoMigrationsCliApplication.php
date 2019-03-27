@@ -10,15 +10,22 @@ namespace SupervillainHQ\MongoMigrations {
 
 
 	use Commando\Command;
+	use Phalcon\Di;
 	use Phalcon\Di\FactoryDefault\Cli as CliDI;
+	use Phalcon\DiInterface;
 	use SupervillainHQ\MongoMigrations\Config\Config;
 
 	class MongoMigrationsCliApplication {
 
 		private static $migrationDir;
+		private static $mongoDatabase;
 
 		static function migrationDir(){
 			return realpath(self::$migrationDir);
+		}
+
+		static function database():string{
+			return trim(self::$mongoDatabase);
 		}
 
 		static function run(string $configPath, Command $command){
@@ -26,6 +33,12 @@ namespace SupervillainHQ\MongoMigrations {
 			Config::load($configPath);
 
 			self::$migrationDir = Config::instance()->migrations->path;
+			self::$mongoDatabase = Config::instance()->database;
+
+			$dependencies = [
+				'SupervillainHQ\MongoMigrations\Core\Dependencies\Mongo'
+			];
+			self::loadDependencies($dependencies);
 
 			if(!is_writable(self::$migrationDir) || !is_dir(self::$migrationDir)){
 				throw new \Exception("Invalid migration directory");
@@ -78,6 +91,28 @@ namespace SupervillainHQ\MongoMigrations {
 				}
 			}
 			throw new \Exception("No such command");
+		}
+
+		private static function loadDependencies(array $dependencies, DiInterface $dependencyInjector = null) {
+			if(is_null($dependencyInjector)){
+				$dependencyInjector = Di::getDefault();
+			}
+
+			foreach ($dependencies as $dependency) {
+				$reflection = new \ReflectionClass($dependency);
+
+				if ($reflection->implementsInterface("SupervillainHQ\\MongoMigrations\\Core\\Dependency")) {
+					$service = $reflection->newInstance();
+
+					if ($service->shared()) {
+						$dependencyInjector->setShared($service->getName(), $service->definition());
+					}
+					else {
+						$dependencyInjector->set($service->getName(), $service->definition());
+					}
+				}
+
+			}
 		}
 
 	}

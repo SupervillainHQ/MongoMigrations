@@ -24,9 +24,14 @@ namespace SupervillainHQ\MongoMigrations\Config {
 		 * @var \stdClass
 		 */
 		private $options;
+		/**
+		 * @var string
+		 */
+		private $cfgPath;
 
-		private function __construct(\stdClass $options) {
+		private function __construct(\stdClass $options, string $path) {
 			$this->options = $options;
+			$this->cfgPath = $path;
 		}
 
 		function __get($name) {
@@ -48,11 +53,16 @@ namespace SupervillainHQ\MongoMigrations\Config {
 			throw new \Exception("Not implemented");
 		}
 
+		function relPath(string $path = ''){
+			$cfgDir = dirname($this->cfgPath);
+			return realpath("{$cfgDir}/{$path}");
+		}
+
 		static function load(string $filepath){
 			if(is_file($filepath) && is_readable($filepath)){
 				$raw = file_get_contents($filepath);
 				if($json = json_decode($raw)){
-					self::$instance = new Config($json);
+					self::$instance = new Config($json, $filepath);
 				}
 				return;
 			}

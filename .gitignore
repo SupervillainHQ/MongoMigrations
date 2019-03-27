@@ -3,3 +3,4 @@ vendor
 composer.lock
 .idea/workspace.xml
 config/auth.json
+resource/test/migrations/*.mson
