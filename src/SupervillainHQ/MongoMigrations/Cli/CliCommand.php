@@ -9,5 +9,6 @@
 namespace SupervillainHQ\MongoMigrations\Cli{
 	interface CliCommand {
 		function execute():int;
+		function help();
 	}
 }

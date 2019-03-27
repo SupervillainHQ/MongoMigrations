@@ -4,6 +4,6 @@
 		"file" : "./auth.json"
 	},
 	"migrations" : {
-		"path" : ""
+		"path" : "/opt/mongo-migrations/resource/test/migrations"
 	}
 }

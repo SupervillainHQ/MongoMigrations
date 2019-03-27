@@ -54,6 +54,7 @@ namespace SupervillainHQ\MongoMigrations\Config {
 				if($json = json_decode($raw)){
 					self::$instance = new Config($json);
 				}
+				return;
 			}
 			throw new \Exception("Invalid config data");
 		}

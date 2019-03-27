@@ -14,13 +14,20 @@ namespace SupervillainHQ\MongoMigrations {
 	use SupervillainHQ\MongoMigrations\Config\Config;
 
 	class MongoMigrationsCliApplication {
+
+		private static $migrationDir;
+
+		static function migrationDir(){
+			return realpath(self::$migrationDir);
+		}
+
 		static function run(string $configPath, Command $command){
 			$di = new CliDI();
 			Config::load($configPath);
 
-			$migrationDir = Config::instance()->migrations->path;
+			self::$migrationDir = Config::instance()->migrations->path;
 
-			if(!is_writable($migrationDir) || !is_dir($migrationDir)){
+			if(!is_writable(self::$migrationDir) || !is_dir(self::$migrationDir)){
 				throw new \Exception("Invalid migration directory");
 			}
 
@@ -46,9 +53,9 @@ namespace SupervillainHQ\MongoMigrations {
 			$cmd = ucfirst($command['command']);
 			$arguments = $command->getArgumentValues();
 
-			$commandClass = "SupervillainHQ\\MongoMigrations\\Cli\\Commands\\{$cmd}Command";
+			$commandClass = "SupervillainHQ\\MongoMigrations\\Cli\\Commands\\{$cmd}";
 			if (!class_exists($commandClass)) {
-				$commandClass = "SupervillainHQ\\MongoMigrations\\Cli\\Commands\\HelpCommand";
+				$commandClass = "SupervillainHQ\\MongoMigrations\\Cli\\Commands\\Help";
 			}
 			$reflector = new \ReflectionClass($commandClass);
 			if ($reflector->implementsInterface('SupervillainHQ\MongoMigrations\Cli\CliCommand')) {
