@@ -60,11 +60,14 @@ namespace SupervillainHQ\MongoMigrations\Migrations {
 				$filename = pathinfo($file, PATHINFO_FILENAME);
 				if($ext == 'mson'){
 					$migrationFile = new MigrationFile();
-					$contents = file_get_contents("{$migrationDir}/{$file}");
-					self::inflate($migrationFile, json_decode($contents));
-					$migrationFile->filename = $filename;
-					array_push($migrationFiles, $migrationFile);
-					echo "{$file}\n";
+					$migrationFilePath = realpath("{$migrationDir}/{$file}");
+					if(is_file($migrationFilePath) && is_readable($migrationFilePath)){
+						$contents = file_get_contents($migrationFilePath);
+						self::inflate($migrationFile, json_decode($contents));
+						$migrationFile->filename = $filename;
+						array_push($migrationFiles, $migrationFile);
+						echo "{$file}\n";
+					}
 				}
 			}
 			return $migrationFiles;

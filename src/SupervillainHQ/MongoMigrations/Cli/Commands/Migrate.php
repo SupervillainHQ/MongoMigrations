@@ -26,10 +26,23 @@ namespace SupervillainHQ\MongoMigrations\Cli\Commands {
 					$op = new ExecuteMigration($migrationFile->collection());
 					// ExecuteMigration instances return false if the collection already exists. This will happen for all
 					// old files. Only new files will actually execute.
+					$created = null;
 					if($op->change() || isset($freshLogCollection)){
 						// If the migration returns true, the migration created a new collection, so we must add a log entry
-						MigrationLog::createEntry($migrationFile->fileName(), $migrationFile->collection());
+//						MigrationLog::createEntry($migrationFile->fileName(), $migrationFile->collection());
 					}
+					else{
+						// If the collection already exists, we just need to verify that the migration entry also exists
+						if(isset($freshLogCollection)){
+							$created = null;
+						}
+						else{
+							if($entry = MigrationLog::getEntry($migrationFile->fileName())){
+								continue;
+							}
+						}
+					}
+					MigrationLog::createEntry($migrationFile->fileName(), $migrationFile->collection(), $created);
 				}
 			}
 			return 0;

@@ -44,6 +44,18 @@ namespace SupervillainHQ\MongoMigrations\Migrations {
 			return $entries;
 		}
 
+		public static function one(\stdClass $filter) {
+			$instance = new MigrationLogEntry();
+			$collection = $instance->getCollection();
+
+			if($found = $collection->findOne((array) $filter)) {
+				$obj = clone $instance;
+				self::parseBson($obj, $found);
+				return $obj;
+			}
+			return null;
+		}
+
 		public static function query(\stdClass $filter) {
 			$instance = new MigrationLogEntry();
 			$collection = $instance->getCollection();
@@ -70,6 +82,13 @@ namespace SupervillainHQ\MongoMigrations\Migrations {
 		public function getSource(): string {
 			$collectionName = trim(Config::instance()->migrations->entries);
 			return $collectionName;
+		}
+
+		/**
+		 * @return \DateTime
+		 */
+		public function created() {
+			return $this->creation;
 		}
 
 
