@@ -11,7 +11,9 @@ use Commando\Command as NateGoodCommand;
 $arguments = array_values($argv);
 
 $path = array_shift($arguments);
+echo "PATH: {$path}\n";
 $pharPath = dirname(realpath($path));
+
 $projectPath = dirname($pharPath);
 $vendorPath = "{$projectPath}/vendor";
 include "{$vendorPath}/autoload.php";
