@@ -6,7 +6,7 @@
 		"cache-files-ttl": 0
 	},
 	"bin" : [
-		"bin/customers.phar"
+		"bin/mm.phar"
 	],
 	"repositories": [],
 	"autoload": {
