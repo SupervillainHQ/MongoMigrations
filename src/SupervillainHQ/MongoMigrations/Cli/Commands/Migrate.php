@@ -12,6 +12,7 @@ namespace SupervillainHQ\MongoMigrations\Cli\Commands {
 	use SupervillainHQ\MongoMigrations\Cli\CliCommand;
 	use SupervillainHQ\MongoMigrations\Migrations\MigrationFile;
 	use SupervillainHQ\MongoMigrations\Migrations\MigrationLog;
+	use SupervillainHQ\MongoMigrations\MongoMigrationsCliApplication;
 	use SupervillainHQ\MongoMigrations\Operations\ExecuteMigration;
 
 	class Migrate implements CliCommand {
@@ -21,6 +22,9 @@ namespace SupervillainHQ\MongoMigrations\Cli\Commands {
 				$freshLogCollection = MigrationLog::initiate();
 			}
 			$migrationFiles = MigrationFile::listFiles();
+			$migrationDir = MongoMigrationsCliApplication::migrationDir();
+			echo "running migrations from dir {$migrationDir}\n";
+
 			foreach ($migrationFiles as $migrationFile) {
 				if($migrationFile instanceof MigrationFile){
 					$op = new ExecuteMigration($migrationFile->collection());
@@ -38,11 +42,13 @@ namespace SupervillainHQ\MongoMigrations\Cli\Commands {
 						}
 						else{
 							if($entry = MigrationLog::getEntry($migrationFile->fileName())){
+								echo "skipped collection '{$migrationFile->collection()}' ({$migrationFile->fileName()})\n";
 								continue;
 							}
 						}
 					}
 					MigrationLog::createEntry($migrationFile->fileName(), $migrationFile->collection(), $created);
+					echo "created collection '{$migrationFile->collection()}' ({$migrationFile->fileName()})\n";
 				}
 			}
 			return 0;

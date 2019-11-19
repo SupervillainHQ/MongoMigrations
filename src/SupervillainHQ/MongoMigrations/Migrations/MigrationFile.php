@@ -52,7 +52,7 @@ namespace SupervillainHQ\MongoMigrations\Migrations {
 
 		static function listFiles(){
 			$migrationDir = MongoMigrationsCliApplication::migrationDir();
-			echo "Migrations in dir {$migrationDir}\n";
+//			echo "Migrations in dir {$migrationDir}\n";
 			$files = array_diff(scandir($migrationDir), ['.', '..']);
 			$migrationFiles = [];
 			foreach ($files as $file) {
@@ -66,7 +66,7 @@ namespace SupervillainHQ\MongoMigrations\Migrations {
 						self::inflate($migrationFile, json_decode($contents));
 						$migrationFile->filename = $filename;
 						array_push($migrationFiles, $migrationFile);
-						echo "{$file}\n";
+//						echo "{$file}\n";
 					}
 				}
 			}
