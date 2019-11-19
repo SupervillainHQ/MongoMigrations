@@ -43,6 +43,37 @@ namespace SupervillainHQ\MongoMigrations\Core {
 		}
 
 
+		public static function hasCollection(){
+			$class = get_called_class();
+			$instance = new $class();
+			$mongo = Di::getDefault()->get($instance->databaseID);
+			if($mongo instanceof Database) {
+				$collections = $mongo->listCollections();
+				$collectionName = $instance->getSource();
+
+				foreach ($collections as $collection) {
+					if($collection->getName() == $collectionName){
+						return true;
+					}
+				}
+			}
+			return false;
+		}
+
+		protected static function initCollection(){
+			$class = get_called_class();
+			$instance = new $class();
+			$mongo = Di::getDefault()->get($instance->databaseID);
+			if($mongo instanceof Database) {
+				$collectionName = $instance->getSource();
+				if(strlen($collectionName)){
+					$collection = $mongo->createCollection($collectionName);
+					return $collection;
+				}
+			}
+			return null;
+		}
+
 		protected function getCollection(){
 			$mongo = Di::getDefault()->get($this->databaseID);
 			if($mongo instanceof Database) {
@@ -54,6 +85,7 @@ namespace SupervillainHQ\MongoMigrations\Core {
 			}
 			return null;
 		}
+
 		protected function count($filter = [], array $options = []):int {
 			$collection = $this->getCollection();
 			return $collection->count($filter, $options);

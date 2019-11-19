@@ -41,7 +41,8 @@ namespace SupervillainHQ\MongoMigrations {
 			self::loadDependencies($dependencies);
 
 			if(!is_writable(self::$migrationDir) || !is_dir(self::$migrationDir)){
-				throw new \Exception("Invalid migration directory");
+				$path = self::$migrationDir;
+				throw new \Exception("Invalid migration directory. Unable to verify path '{$path}'");
 			}
 
 			if (stripos(getenv("APP_ENV"), "prod")){

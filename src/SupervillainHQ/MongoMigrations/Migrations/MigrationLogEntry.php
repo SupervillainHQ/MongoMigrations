@@ -58,6 +58,14 @@ namespace SupervillainHQ\MongoMigrations\Migrations {
 			}
 		}
 
+		public static function initiated():bool{
+			return MigrationLogEntry::hasCollection();
+		}
+
+		public static function initiate(){
+			return MigrationLogEntry::initCollection();
+		}
+
 
 		public function getSource(): string {
 			$collectionName = trim(Config::instance()->migrations->entries);

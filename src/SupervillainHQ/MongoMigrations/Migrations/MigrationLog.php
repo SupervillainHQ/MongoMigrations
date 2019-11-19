@@ -27,6 +27,14 @@ namespace SupervillainHQ\MongoMigrations\Migrations {
 			return $instance;
 		}
 
+		public static function initiated():bool{
+			return MigrationLogEntry::initiated();
+		}
+
+		public static function initiate() {
+			return MigrationLogEntry::initiate();
+		}
+
 		function entries():array {
 			return $this->entries;
 		}
