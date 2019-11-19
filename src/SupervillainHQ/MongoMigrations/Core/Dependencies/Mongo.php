@@ -30,7 +30,7 @@ namespace SupervillainHQ\MongoMigrations\Core\Dependencies {
 			$authFile = Config::instance()->authorization;
 			if(($authFile instanceof \stdClass) and property_exists($authFile, 'file')){
 				$authPath = trim($authFile->file);
-				$authPath = Config::instance()->relPath($authPath);
+				$authPath = Config::instance()->realPath($authPath);
 			}
 
 			$connection = "mongodb://{$host}:{$port}";

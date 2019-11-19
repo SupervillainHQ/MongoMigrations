@@ -53,9 +53,51 @@ namespace SupervillainHQ\MongoMigrations\Config {
 			throw new \Exception("Not implemented");
 		}
 
-		function relPath(string $path = ''){
+		function realPath(string $path = ''){
 			$cfgDir = dirname($this->cfgPath);
 			return realpath("{$cfgDir}/{$path}");
+		}
+
+		function vendorPath(){
+			$filePath = __FILE__;
+			if(false !== strpos($filePath, 'vendor/')){
+				$fragments = explode('/', $filePath);
+				$vendorPath = '';
+				while ($fragment = array_shift($fragments)){
+					if('vendor' == $fragment){
+						break;
+					}
+					$vendorPath = "{$vendorPath}/{$fragment}";
+				}
+				if($absVendorPath = realpath($vendorPath)){
+					return $absVendorPath;
+				}
+			}
+			$root = $this->realPath();
+			$rootPath = $root;
+			$rootVendor = "{$root}/vendor";
+			while(!is_dir($rootVendor)){
+				$rootPath = dirname($rootPath);
+				$rootVendor = "{$rootPath}/vendor";
+				if(strlen($rootPath) < 3 || '/' == $rootPath){
+					break;
+				}
+			}
+			if(is_dir($rootVendor)){
+				return $rootVendor;
+			}
+			return null;
+		}
+
+		function basePath(string $path = ''){
+			if($vendorPath = $this->vendorPath()){
+				$basePath = "{$vendorPath}/..";
+				if(strlen($path)){
+					$basePath = rtrim($basePath) . '/' .rtrim($path, '/');
+				}
+				return realpath($basePath);
+			}
+			return null;
 		}
 
 		static function load(string $filepath){

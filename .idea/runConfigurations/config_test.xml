@@ -1,0 +1,5 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="config test" type="PhpLocalRunConfigurationType" factoryName="PHP Console" path="$PROJECT_DIR$/bin/mm" scriptParameters="-c Config test">
+    <method v="2" />
+  </configuration>
+</component>
