@@ -11,12 +11,25 @@ use Commando\Command as NateGoodCommand;
 $arguments = array_values($argv);
 
 $path = array_shift($arguments);
-echo "PATH: {$path}\n";
 $pharPath = dirname(realpath($path));
 
 $projectPath = dirname($pharPath);
+$vendorPos = strpos($projectPath, 'vendor/');
+if(false !== $vendorPos){
+	$projectPath = rtrim(substr($projectPath, 0, $vendorPos), '/');
+}
 $vendorPath = "{$projectPath}/vendor";
 include "{$vendorPath}/autoload.php";
+
+$fallbackConfig = realpath("{$pharPath}/../config/config.json");
+$localConfig = "{$projectPath}/config/mm.json";
+$configPath = null;
+if(is_readable($fallbackConfig) && is_file($fallbackConfig)){
+	$configPath = $fallbackConfig;
+}
+if(is_readable($localConfig) && is_file($localConfig)){
+	$configPath = $localConfig;
+}
 
 $cmd = new NateGoodCommand();
 
@@ -40,10 +53,18 @@ $cmd->option('c')
 $verbose = $cmd['verbose'];
 
 if($verbose){
-	echo "$pharPath\n";
-	echo "$projectPath\n";
-	echo "$vendorPath\n";
+	echo "PATH: {$path}\n";
+	echo "EXE PATH: {$pharPath}\n";
+	echo "LOCAL PROJECT PATH: {$projectPath}\n";
+	echo "LOCAL VENDOR PATH: {$vendorPath}\n";
+	echo "CONFIG PATH: {$configPath}\n";
 }
 
-MongoMigrationsCliApplication::run("{$projectPath}/config/config.json", $cmd);
+if(is_null($configPath)){
+	echo "Invalid config path\n";
+	echo "(fallback: {$fallbackConfig})\n";
+	echo "(local: {$localConfig})\n";
+	return 0;
+}
+MongoMigrationsCliApplication::run($configPath, $cmd);
 

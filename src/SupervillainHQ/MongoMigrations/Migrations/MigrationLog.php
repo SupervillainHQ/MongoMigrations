@@ -21,10 +21,26 @@ namespace SupervillainHQ\MongoMigrations\Migrations {
 			return $instance;
 		}
 
-		public static function createEntry(string $name, string $collectionName):MigrationLogEntry{
-			$instance = MigrationLogEntry::createNew($name, $collectionName);
+		/**
+		 * @param string $name
+		 * @return MigrationLogEntry|null
+		 */
+		public static function getEntry(string $name){
+			return MigrationLogEntry::one((object) ['name' => $name]);
+		}
+
+		public static function createEntry(string $name, string $collectionName, \DateTime $created = null):MigrationLogEntry{
+			$instance = MigrationLogEntry::createNew($name, $collectionName, $created);
 			$instance->save();
 			return $instance;
+		}
+
+		public static function initiated():bool{
+			return MigrationLogEntry::initiated();
+		}
+
+		public static function initiate() {
+			return MigrationLogEntry::initiate();
 		}
 
 		function entries():array {
