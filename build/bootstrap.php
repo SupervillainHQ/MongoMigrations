@@ -13,9 +13,16 @@ $arguments = array_values($argv);
 $path = array_shift($arguments);
 echo "PATH: {$path}\n";
 $pharPath = dirname(realpath($path));
+echo "EXE PATH: {$pharPath}\n";
 
 $projectPath = dirname($pharPath);
+$vendorPos = strpos($projectPath, 'vendor/');
+if(false !== $vendorPos){
+	$projectPath = substr($projectPath, 0, $vendorPos);
+}
+echo "LOCAL PROJECT PATH: {$projectPath}\n";
 $vendorPath = "{$projectPath}/vendor";
+echo "LOCAL VENDOR PATH: {$vendorPath}\n";
 include "{$vendorPath}/autoload.php";
 
 $cmd = new NateGoodCommand();
