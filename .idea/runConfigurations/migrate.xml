@@ -1,0 +1,5 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="migrate" type="PhpLocalRunConfigurationType" factoryName="PHP Console" path="$PROJECT_DIR$/bin/mm.phar" scriptParameters="-c Migrate">
+    <method v="2" />
+  </configuration>
+</component>
