@@ -21,7 +21,7 @@ if(false !== $vendorPos){
 $vendorPath = "{$projectPath}/vendor";
 include "{$vendorPath}/autoload.php";
 
-$fallbackConfig = "{$path}/../config/config.json";
+$fallbackConfig = realpath("{$pharPath}/../config/config.json");
 $localConfig = "{$projectPath}/config/mm.json";
 $configPath = null;
 if(is_readable($fallbackConfig) && is_file($fallbackConfig)){
@@ -60,5 +60,11 @@ if($verbose){
 	echo "CONFIG PATH: {$configPath}\n";
 }
 
+if(is_null($configPath)){
+	echo "Invalid config path\n";
+	echo "(fallback: {$fallbackConfig})\n";
+	echo "(local: {$localConfig})\n";
+	return 0;
+}
 MongoMigrationsCliApplication::run($configPath, $cmd);
 
