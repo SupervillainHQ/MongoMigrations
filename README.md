@@ -4,6 +4,36 @@
 
     composer install supervillainhq/mongomigrations
 
+# Required set up
+
+## Config files (mm.json and an auth.json)
+
+Create an 'mm.json' json file in a directory that the MongoMigrations binary (vendor/bin/mm) can find: ./config/
+
+Add the following contents:
+
+    {
+      "database" : "<database-name>",
+      "host" : "127.0.0.1",
+      "port" : "27017",
+      "authorization" : {
+        "file" : "<path-to-a-json-file-with-auth-info>"
+      },
+      "migrations" : {
+        "path" : "<path-to-migrations-directory>",
+        "entries" : "mm_migration_log"
+      }
+    }
+
+The authorization.file auth-file should have the following format:
+
+    {
+      "user": "<username>",
+      "password": "<password>",
+      "authenticationDatabase": "<auth-database>"
+    }
+
+
 # Commands
 
 ### Options
