@@ -29,24 +29,6 @@ namespace Svhq\MongoMigrations {
 		}
 
 		static function run(string $configFilePath): int{
-//			$di = new CliDI();
-//			Config::load($configPath);
-
-//			self::$migrationDir = Config::instance()->migrations->path;
-//			self::$mongoDatabase = Config::instance()->database;
-
-//			$dependencies = [
-//				'Svhq\MongoMigrations\Core\Dependencies\Mongo'
-//			];
-//			self::loadDependencies($dependencies);
-
-//			if(!is_writable(self::$migrationDir) || !is_dir(self::$migrationDir)){
-//				$path = self::$migrationDir;
-//				throw new \Exception("Invalid migration directory. Unable to verify path '{$path}'");
-//			}
-
-
-			//--
             $di = new CliDi();
             Config::loadFromPath($configFilePath);
 
@@ -79,7 +61,6 @@ namespace Svhq\MongoMigrations {
                 Config::loadFromPath($userCfgPath);
             }
             DependencyLoader::loadFromConfig($di);
-//            DependencyLoader::load(['Svhq\Core\Dependencies/Mongo']);
 
             if(!is_writable(self::$migrationDir) || !is_dir(self::$migrationDir)){
                 $path = self::$migrationDir;
@@ -115,59 +96,6 @@ namespace Svhq\MongoMigrations {
             Console::log("<red>Command evaluated but did not return a valid exit-code</red>");
             return ExitCodes::GENERIC_ERROR;
 		}
-
-//		private static function evaluate(Command $command){
-//			$cmd = ucfirst($command['command']);
-//			$arguments = $command->getArgumentValues();
-//
-//			$commandClass = "Svhq\\MongoMigrations\\Cli\\Commands\\{$cmd}";
-//			if (!class_exists($commandClass)) {
-//				$commandClass = "Svhq\\MongoMigrations\\Cli\\Commands\\Help";
-//			}
-//			$reflector = new \ReflectionClass($commandClass);
-//			if ($reflector->implementsInterface('Svhq\MongoMigrations\Cli\CliCommand')) {
-//				if ($reflector->hasMethod('__construct')) {
-//					$method = $reflector->getMethod('__construct');
-//					$params = $method->getParameters();
-//					if (count($params)) {
-//						$cliCommand = $reflector->newInstanceArgs($arguments);
-//					}
-//					else{
-//						$cliCommand = $reflector->newInstance();
-//					}
-//				}
-//				else{
-//					$cliCommand = $reflector->newInstance();
-//				}
-//				if(isset($cliCommand)){
-//					$exitCode = $cliCommand->execute();
-//					exit($exitCode);
-//				}
-//			}
-//			throw new \Exception("No such command");
-//		}
-
-//		private static function loadDependencies(array $dependencies, DiInterface $dependencyInjector = null) {
-//			if(is_null($dependencyInjector)){
-//				$dependencyInjector = Di::getDefault();
-//			}
-//
-//			foreach ($dependencies as $dependency) {
-//				$reflection = new \ReflectionClass($dependency);
-//
-//				if ($reflection->implementsInterface("Svhq\\MongoMigrations\\Core\\Dependency")) {
-//					$service = $reflection->newInstance();
-//
-//					if ($service->shared()) {
-//						$dependencyInjector->setShared($service->getName(), $service->definition());
-//					}
-//					else {
-//						$dependencyInjector->set($service->getName(), $service->definition());
-//					}
-//				}
-//
-//			}
-//		}
 
         protected function commandNamespaces(): array
         {

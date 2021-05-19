@@ -11,13 +11,14 @@ namespace Svhq\MongoMigrations\Cli\Commands {
 
     use Svhq\Core\Cli\CliCommand;
     use Svhq\Core\Cli\Console;
+    use Svhq\Core\Cli\ExitCodes;
 
     class Help implements CliCommand {
 
 
 		function execute(): int {
 			$this->help();
-			return 0;
+			return ExitCodes::OK;
 		}
 
 		function help() {
