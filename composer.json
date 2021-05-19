@@ -19,7 +19,6 @@
 		"ext-json" : "*",
 		"ext-mongodb" : "*",
 		"ext-phalcon" : "*",
-		"bugsnag/bugsnag": "^3.4",
 		"mongodb/mongodb": "^1.0",
 		"nategood/commando": "^0.3.0"
 	},

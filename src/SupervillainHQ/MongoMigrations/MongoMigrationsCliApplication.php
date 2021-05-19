@@ -52,10 +52,6 @@ namespace SupervillainHQ\MongoMigrations {
 					$debug->log(\Phalcon\Logger::CRITICAL, "File: " . $e->getFile());
 					$debug->log(\Phalcon\Logger::CRITICAL, "Line: " . $e->getLine());
 					$debug->log(\Phalcon\Logger::CRITICAL, "Trace: " . $e->getTraceAsString());
-
-					if($bugsnag = $di->get('bugsnag')){
-						$bugsnag->notifyException($e);
-					}
 					echo "Command failed. See log for details\n";
 				});
 			}
