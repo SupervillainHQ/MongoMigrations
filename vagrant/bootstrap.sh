@@ -19,7 +19,7 @@ apt-get update
 # php specific version
 add-apt-repository -y ppa:ondrej/php
 
-apt-get install -y php7.4 php7.4-psr php7.4-phalcon php7.4-cli php7.4-curl php7.4-gd php7.4-intl php7.4-mbstring php7.4-xml php7.4-xsl php7.4-zip php7.4-xdebug
+apt-get install -y php7.4-psr php7.4-phalcon php7.4-cli php7.4-curl php7.4-gd php7.4-intl php7.4-mbstring php7.4-xml php7.4-xsl php7.4-zip php7.4-xdebug
 apt-get install -y php7.4-mongodb
 apt-get install -y php-msgpack
 apt-get install -y mongodb-org
