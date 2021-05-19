@@ -5,13 +5,13 @@
 	"config": {
 		"local": {
 			"paths": [
-				"{PROJECT}/config/config.json"
+				"{PROJECT}/mm.json"
 			]
 		},
 		"global": {
 			"paths": [
-				"{USER}/mongo-migrations.json",
-				"{USER}/mm.json"
+				"{USER}/mm.json",
+				"{USER}/mongo-migrations.json"
 			]
 		}
 	},
