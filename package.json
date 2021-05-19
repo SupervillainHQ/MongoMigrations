@@ -6,8 +6,8 @@
 	"license": "UNLICENSED",
 	"scripts": {
 		"install": "bash ./scripts/install.sh",
-		"build": "unlink ./bin/mm && php ./scripts/build-phar.php",
-		"publish": "mv ./bin/mm.phar ./bin/mm"
+		"build": "php ./scripts/build-phar.php",
+		"publish": "bash ./scripts/publish.sh"
 	},
 	"devDependencies": {
 	},
