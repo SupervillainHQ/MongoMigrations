@@ -6,12 +6,12 @@
  * Time: 11:25
  */
 
-namespace SupervillainHQ\MongoMigrations\Operations {
+namespace Svhq\MongoMigrations\Operations {
 
 
 	use MongoDB\Database;
 	use Phalcon\Di;
-	use SupervillainHQ\MongoMigrations\Migrations\MigrationLog;
+	use Svhq\MongoMigrations\Migrations\MigrationLog;
 
 	class CreateCollectionOperation implements Operation {
 

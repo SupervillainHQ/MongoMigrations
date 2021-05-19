@@ -6,7 +6,7 @@
  * Time: 11:27
  */
 
-namespace SupervillainHQ\MongoMigrations\Operations {
+namespace Svhq\MongoMigrations\Operations {
 
 
 	class Migration implements Operation {

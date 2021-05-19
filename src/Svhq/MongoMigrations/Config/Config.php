@@ -6,7 +6,7 @@
  * Time: 10:31
  */
 
-namespace SupervillainHQ\MongoMigrations\Config {
+namespace Svhq\MongoMigrations\Config {
 
 
 	class Config {

@@ -6,7 +6,7 @@
  * Time: 12:56
  */
 
-namespace SupervillainHQ\MongoMigrations\Migrations {
+namespace Svhq\MongoMigrations\Migrations {
 
 
 

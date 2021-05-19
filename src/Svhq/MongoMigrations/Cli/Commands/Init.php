@@ -6,12 +6,12 @@
  * Time: 12:12
  */
 
-namespace SupervillainHQ\MongoMigrations\Cli\Commands {
+namespace Svhq\MongoMigrations\Cli\Commands {
 
-	use SupervillainHQ\MongoMigrations\Config\Config;
-	use SupervillainHQ\MongoMigrations\Cli\CliCommand;
 
-	class Init implements CliCommand {
+    use Svhq\Core\Cli\CliCommand;
+
+    class Init implements CliCommand {
 
 		function execute(): int {
 			// create config + auth file and a migration-list/status collection in the auth-database

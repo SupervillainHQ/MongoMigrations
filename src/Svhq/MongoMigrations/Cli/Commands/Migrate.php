@@ -6,14 +6,14 @@
  * Time: 10:18
  */
 
-namespace SupervillainHQ\MongoMigrations\Cli\Commands {
+namespace Svhq\MongoMigrations\Cli\Commands {
 
 
-	use SupervillainHQ\MongoMigrations\Cli\CliCommand;
-	use SupervillainHQ\MongoMigrations\Migrations\MigrationFile;
-	use SupervillainHQ\MongoMigrations\Migrations\MigrationLog;
-	use SupervillainHQ\MongoMigrations\MongoMigrationsCliApplication;
-	use SupervillainHQ\MongoMigrations\Operations\ExecuteMigration;
+    use Svhq\Core\Cli\CliCommand;
+    use Svhq\MongoMigrations\Migrations\MigrationFile;
+	use Svhq\MongoMigrations\Migrations\MigrationLog;
+	use Svhq\MongoMigrations\MongoMigrationsCliApplication;
+	use Svhq\MongoMigrations\Operations\ExecuteMigration;
 
 	class Migrate implements CliCommand {
 

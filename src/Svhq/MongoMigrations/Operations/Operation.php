@@ -6,7 +6,7 @@
  * Time: 11:29
  */
 
-namespace SupervillainHQ\MongoMigrations\Operations {
+namespace Svhq\MongoMigrations\Operations {
 
 
 	interface Operation {

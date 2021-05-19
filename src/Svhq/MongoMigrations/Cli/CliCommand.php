@@ -6,7 +6,7 @@
  * Time: 14:16
  */
 
-namespace SupervillainHQ\MongoMigrations\Cli{
+namespace Svhq\MongoMigrations\Cli{
 	interface CliCommand {
 		function execute():int;
 		function help();

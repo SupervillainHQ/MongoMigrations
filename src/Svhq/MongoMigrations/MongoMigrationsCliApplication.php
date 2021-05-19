@@ -6,14 +6,13 @@
  * Time: 14:09
  */
 
-namespace SupervillainHQ\MongoMigrations {
+namespace Svhq\MongoMigrations {
 
-	use Phalcon\Di;
 	use Phalcon\Di\FactoryDefault\Cli as CliDI;
-	use SupervillainHQ\MongoMigrations\Config\Config;
     use Svhq\Core\Application\CliApplication;
     use Svhq\Core\Cli\Console;
     use Svhq\Core\Cli\ExitCodes;
+    use Svhq\Core\Config\Config;
     use Svhq\Core\System\DependencyLoader;
 
     class MongoMigrationsCliApplication extends CliApplication {
@@ -37,7 +36,7 @@ namespace SupervillainHQ\MongoMigrations {
 //			self::$mongoDatabase = Config::instance()->database;
 
 //			$dependencies = [
-//				'SupervillainHQ\MongoMigrations\Core\Dependencies\Mongo'
+//				'Svhq\MongoMigrations\Core\Dependencies\Mongo'
 //			];
 //			self::loadDependencies($dependencies);
 
@@ -46,27 +45,41 @@ namespace SupervillainHQ\MongoMigrations {
 //				throw new \Exception("Invalid migration directory. Unable to verify path '{$path}'");
 //			}
 
-//			if (stripos(getenv("APP_ENV"), "prod")){
-//				set_exception_handler(function (\Throwable $e) use ($di) {
-//					$debug = $di->get("debug");
-//					$debug->log(\Phalcon\Logger::CRITICAL, "Message: " . $e->getMessage());
-//					$debug->log(\Phalcon\Logger::CRITICAL, "File: " . $e->getFile());
-//					$debug->log(\Phalcon\Logger::CRITICAL, "Line: " . $e->getLine());
-//					$debug->log(\Phalcon\Logger::CRITICAL, "Trace: " . $e->getTraceAsString());
-//					echo "Command failed. See log for details\n";
-//				});
-//			}
 
-//			self::evaluate($command);
 			//--
             $di = new CliDi();
-            \Svhq\Core\Config\Config::loadFromPath($configFilePath);
+            Config::loadFromPath($configFilePath);
 
-            self::$migrationDir = Config::instance()->migrations->path;
-            self::$mongoDatabase = Config::instance()->database;
+            $defaults = Config::instance()->getDefaults();
+            $defaultMigrationDir = trim($defaults->migrations->path);
+            $authDatabase = trim($defaults->database);
+            self::$migrationDir = $defaultMigrationDir;
+            self::$mongoDatabase = $authDatabase;
 
-//            DependencyLoader::loadFromConfig($di, null, true);
-            DependencyLoader::load(['SupervillainHQ\MongoMigrations\Core\Dependencies\Mongo']);
+            // TODO: load user-config be able to determine user/project-sourcepaths
+            $userCfgPath = null;
+            $localPaths = Config::instance()->getConfig('local.paths');
+            foreach ($localPaths as $path) {
+                if($aPath = Config::instance()->absolutePath($path)){
+                    $userCfgPath = $aPath;
+                    break;
+                }
+            }
+            if(is_null($userCfgPath)){
+                $globalPaths = Config::instance()->getConfig('global.paths');
+                foreach ($globalPaths as $path) {
+                    if($aPath = Config::instance()->absolutePath($path)){
+                        $userCfgPath = $aPath;
+                        break;
+                    }
+                }
+            }
+
+            if($userCfgPath){
+                Config::loadFromPath($userCfgPath);
+            }
+            DependencyLoader::loadFromConfig($di);
+//            DependencyLoader::load(['Svhq\Core\Dependencies/Mongo']);
 
             if(!is_writable(self::$migrationDir) || !is_dir(self::$migrationDir)){
                 $path = self::$migrationDir;
@@ -107,12 +120,12 @@ namespace SupervillainHQ\MongoMigrations {
 //			$cmd = ucfirst($command['command']);
 //			$arguments = $command->getArgumentValues();
 //
-//			$commandClass = "SupervillainHQ\\MongoMigrations\\Cli\\Commands\\{$cmd}";
+//			$commandClass = "Svhq\\MongoMigrations\\Cli\\Commands\\{$cmd}";
 //			if (!class_exists($commandClass)) {
-//				$commandClass = "SupervillainHQ\\MongoMigrations\\Cli\\Commands\\Help";
+//				$commandClass = "Svhq\\MongoMigrations\\Cli\\Commands\\Help";
 //			}
 //			$reflector = new \ReflectionClass($commandClass);
-//			if ($reflector->implementsInterface('SupervillainHQ\MongoMigrations\Cli\CliCommand')) {
+//			if ($reflector->implementsInterface('Svhq\MongoMigrations\Cli\CliCommand')) {
 //				if ($reflector->hasMethod('__construct')) {
 //					$method = $reflector->getMethod('__construct');
 //					$params = $method->getParameters();
@@ -142,7 +155,7 @@ namespace SupervillainHQ\MongoMigrations {
 //			foreach ($dependencies as $dependency) {
 //				$reflection = new \ReflectionClass($dependency);
 //
-//				if ($reflection->implementsInterface("SupervillainHQ\\MongoMigrations\\Core\\Dependency")) {
+//				if ($reflection->implementsInterface("Svhq\\MongoMigrations\\Core\\Dependency")) {
 //					$service = $reflection->newInstance();
 //
 //					if ($service->shared()) {
@@ -158,7 +171,7 @@ namespace SupervillainHQ\MongoMigrations {
 
         protected function commandNamespaces(): array
         {
-            // TODO: Implement commandNamespaces() method.
+            return ['Svhq\\MongoMigrations\\Cli\\Commands'];
         }
     }
 }

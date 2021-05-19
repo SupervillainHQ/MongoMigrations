@@ -6,12 +6,11 @@
  * Time: 10:18
  */
 
-namespace SupervillainHQ\MongoMigrations\Cli\Commands {
+namespace Svhq\MongoMigrations\Cli\Commands {
 
 
-	use SupervillainHQ\MongoMigrations\Cli\CliCommand;
-	use SupervillainHQ\MongoMigrations\Migrations\MigrationFile;
-	use SupervillainHQ\MongoMigrations\MongoMigrationsCliApplication;
+    use Svhq\Core\Cli\CliCommand;
+    use Svhq\MongoMigrations\Migrations\MigrationFile;
 
 	class Create implements CliCommand {
 

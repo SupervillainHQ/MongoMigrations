@@ -6,10 +6,10 @@
  * Time: 10:25
  */
 
-namespace SupervillainHQ\MongoMigrations\Migrations {
+namespace Svhq\MongoMigrations\Migrations {
 
 
-	use SupervillainHQ\MongoMigrations\MongoMigrationsCliApplication;
+	use Svhq\MongoMigrations\MongoMigrationsCliApplication;
 
 	class MigrationFile implements \JsonSerializable {
 

@@ -1,12 +1,12 @@
 <?php
 
 
-namespace SupervillainHQ\MongoMigrations\Cli\Commands {
+namespace Svhq\MongoMigrations\Cli\Commands {
 
 
-	use SupervillainHQ\MongoMigrations\Cli\CliCommand;
-	use SupervillainHQ\MongoMigrations\Cli\Commands\SubCommands\ConfigInfo;
-	use SupervillainHQ\MongoMigrations\Cli\Commands\SubCommands\ConfigTest;
+	use Svhq\MongoMigrations\Cli\CliCommand;
+	use Svhq\MongoMigrations\Cli\Commands\SubCommands\ConfigInfo;
+	use Svhq\MongoMigrations\Cli\Commands\SubCommands\ConfigTest;
 
 	class Config implements CliCommand {
 

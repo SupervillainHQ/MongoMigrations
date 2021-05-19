@@ -1,13 +1,13 @@
 <?php
 
 
-namespace SupervillainHQ\MongoMigrations\Cli\Commands\SubCommands {
+namespace Svhq\MongoMigrations\Cli\Commands\SubCommands {
 
 
-	use SupervillainHQ\MongoMigrations\Cli\CliCommand;
-	use SupervillainHQ\MongoMigrations\Config\Config;
+    use Svhq\Core\Cli\CliCommand;
+    use Svhq\Core\Config\Config;
 
-	class ConfigInfo implements CliCommand {
+    class ConfigInfo implements CliCommand {
 
 		function execute(): int {
 			$config = Config::instance();

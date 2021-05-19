@@ -6,13 +6,13 @@
  * Time: 13:01
  */
 
-namespace SupervillainHQ\MongoMigrations\Migrations {
+namespace Svhq\MongoMigrations\Migrations {
 
 	use MongoDB\BSON\ObjectId;
-	use SupervillainHQ\MongoMigrations\Config\Config;
-	use SupervillainHQ\MongoMigrations\Core\Document;
+    use Svhq\Core\Config\Config;
+    use Svhq\Core\Mongo\Document;
 
-	class MigrationLogEntry extends Document {
+    class MigrationLogEntry extends Document {
 		public $collection;
 		public $name;
 		public $creation;
@@ -79,7 +79,7 @@ namespace SupervillainHQ\MongoMigrations\Migrations {
 		}
 
 
-		public function getSource(): string {
+		public static function getSource(): string {
 			$collectionName = trim(Config::instance()->migrations->entries);
 			return $collectionName;
 		}
@@ -94,10 +94,9 @@ namespace SupervillainHQ\MongoMigrations\Migrations {
 
 		/**
 		 * Should update if exists, and create if not exists
-		 * @return mixed
 		 * @throws \Exception
 		 */
-		public function save() {
+		public function save():void{
 			$collection = $this->getCollection();
 			$data = [
 				'name' => $this->name,
@@ -109,12 +108,12 @@ namespace SupervillainHQ\MongoMigrations\Migrations {
 				];
 			}
 			if($this->_id instanceof ObjectId){
-				return $collection->updateOne(['_id' => $this->_id], ['$set' => $data]);
+				$collection->updateOne(['_id' => $this->_id], ['$set' => $data]);
 			}
 			$result = $collection->insertOne($data);
 			$this->_id = $result->getInsertedId();
 			if($this->_id instanceof ObjectId){
-				return $result;
+				$result;
 			}
 			throw new \Exception("Failed to save");
 		}
@@ -123,7 +122,7 @@ namespace SupervillainHQ\MongoMigrations\Migrations {
 		 * Should insert if not exists
 		 * @return mixed
 		 */
-		public function update() {
+		public function update():void {
 			// TODO: Implement update() method.
 		}
 
@@ -131,7 +130,7 @@ namespace SupervillainHQ\MongoMigrations\Migrations {
 		 * Should fail if already exists
 		 * @return mixed
 		 */
-		public function create() {
+		public function create():void{
 			// TODO: Implement create() method.
 		}
 
@@ -139,7 +138,7 @@ namespace SupervillainHQ\MongoMigrations\Migrations {
 		 * Should continue if not exists
 		 * @return mixed
 		 */
-		public function delete() {
+		public function delete():void {
 			// TODO: Implement delete() method.
 		}
 	}
