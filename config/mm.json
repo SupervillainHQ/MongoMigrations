@@ -1,0 +1,39 @@
+{
+	"auth": {
+		"path": "./config/auth.json"
+	},
+	"config": {
+		"local": {
+			"paths": [
+				"{PROJECT}/config/config.json"
+			]
+		},
+		"global": {
+			"paths": [
+				"{USER}/mongo-migrations.json",
+				"{USER}/mm.json"
+			]
+		}
+	},
+	"defaults": {
+		"database" : "MongoMigrations",
+		"host" : "127.0.0.1",
+		"port" : "27017",
+		"authorization" : {
+			"file" : "./auth.json"
+		},
+		"migrations" : {
+			"path" : "/opt/mongo-migrations/dev/tests/migrations",
+			"entries" : "mm_migration_log"
+		}
+	},
+	"dependencies": {
+		"namespaces": [],
+		"classes": [
+			"Svhq/Core/Dependencies/Mongo"
+		]
+	},
+	"environment": {
+		"src": "./src"
+	}
+}

@@ -5,7 +5,7 @@
  * TODO: Documentation required!
  */
 
-use SupervillainHQ\MongoMigrations\MongoMigrationsCliApplication;
+use Svhq\MongoMigrations\MongoMigrationsCliApplication;
 
 $arguments = array_values($argv);
 
@@ -27,7 +27,7 @@ if(false !== strpos($projectPath, '/vendor')){
 $vendorPath = "{$projectPath}/vendor";
 
 // Require a config file path
-$configPath = "{$projectPath}/config/core.json";
+$configPath = "{$projectPath}/config/mm.json";
 if($cfgPath = array_shift($arguments)){
     if(0 === strpos($cfgPath, '/')){
         $cfgPath = realpath($cfgPath);
@@ -45,7 +45,6 @@ $configPath = $cfgPath;
 
 if($autoloadPath = realpath("{$vendorPath}/autoload.php")){
     include $autoloadPath;
-//    $returnCode = SvhqCoreCliApplication::run($configPath);
     $returnCode = MongoMigrationsCliApplication::run($configPath);
     exit($returnCode);
 }
