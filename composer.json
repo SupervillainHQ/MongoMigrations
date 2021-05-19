@@ -1,5 +1,6 @@
 {
 	"name" : "supervillainhq/mongomigrations",
+	"description": "Distribute mongo database changes",
 	"config" : {
 		"vendor-dir" : "vendor",
 		"secure-http" : false,
@@ -8,7 +9,12 @@
 	"bin" : [
 		"bin/mm"
 	],
-	"repositories": [],
+	"repositories": [
+		{
+			"type": "vcs",
+			"url": "https://github.com/SupervillainHQ/Core"
+		}
+	],
 	"autoload": {
 		"psr-0": {
 			"": "src"
@@ -20,10 +26,10 @@
 		"ext-mongodb" : "*",
 		"ext-phalcon" : "*",
 		"mongodb/mongodb": "^1.0",
-		"nategood/commando": "^0.3.0"
+		"supervillainhq/core": "dev-master"
 	},
 	"require-dev":{
-		"phalcon/devtools": "^3",
-		"phpunit/phpunit": "^4.8"
+		"phalcon/devtools": "^4",
+		"phpunit/phpunit": "^9"
 	}
 }

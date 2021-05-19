@@ -5,3 +5,4 @@ composer.lock
 config/auth.json
 resource/test/migrations/*.mson
 vagrant/*.log
+auth.json
