@@ -13,6 +13,13 @@ namespace Svhq\MongoMigrations\Cli\Commands {
     use Svhq\Core\Cli\Console;
     use Svhq\Core\Cli\ExitCodes;
 
+    /**
+     * Class Help
+     * @package Svhq\MongoMigrations\Cli\Commands
+     * @HelpText("Custom Help Command")
+     * @HelpDescription("Dscribes MongoMigration command")
+     * @CommandDescription("php vendor/bin/mm help")
+     */
     class Help implements CliCommand {
 
 

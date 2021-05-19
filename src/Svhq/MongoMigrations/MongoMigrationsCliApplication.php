@@ -18,25 +18,25 @@ namespace Svhq\MongoMigrations {
     class MongoMigrationsCliApplication extends CliApplication {
 
 		private static $migrationDir;
-		private static $mongoDatabase;
+		private static $logCollection;
 
 		static function migrationDir(){
 			return realpath(self::$migrationDir);
 		}
 
-		static function database():string{
-			return trim(self::$mongoDatabase);
+		static function logCollection():string{
+			return trim(self::$logCollection);
 		}
 
 		static function run(string $configFilePath): int{
             $di = new CliDi();
             Config::loadFromPath($configFilePath);
 
-            $defaults = Config::instance()->getDefaults();
-            $defaultMigrationDir = trim($defaults->migrations->path);
-            $authDatabase = trim($defaults->database);
+            $migrationDefaults = Config::instance()->getDefaults('migrations');
+            $defaultMigrationDir = trim($migrationDefaults->path);
+            $defaultMigrationCollection = trim($migrationDefaults->entries);
             self::$migrationDir = $defaultMigrationDir;
-            self::$mongoDatabase = $authDatabase;
+            self::$logCollection = $defaultMigrationCollection;
 
             // TODO: load user-config be able to determine user/project-sourcepaths
             $userCfgPath = null;
