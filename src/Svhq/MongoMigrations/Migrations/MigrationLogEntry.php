@@ -9,6 +9,7 @@
 namespace Svhq\MongoMigrations\Migrations {
 
 	use MongoDB\BSON\ObjectId;
+    use MongoDB\Collection;
     use Svhq\Core\Config\Config;
     use Svhq\Core\Mongo\Document;
     use Svhq\MongoMigrations\Cli\Util\MongoUtil;
@@ -16,7 +17,7 @@ namespace Svhq\MongoMigrations\Migrations {
     class MigrationLogEntry extends Document {
 		public string $collection;
 		public string $name;
-		public ?\DateTime $creation;
+		public $creation;
 
 
 		public static function createNew(string $name, string $collection, \DateTime $created = null):MigrationLogEntry{
@@ -36,10 +37,20 @@ namespace Svhq\MongoMigrations\Migrations {
 			$collection = $instance->getCollection();
 
 			$entries = [];
+            $bindTypes = (object) [
+                'creation' => (object) [
+                    'factory' => function(object $dateTimeValue){
+                        if(property_exists($dateTimeValue, 'date')){
+                            $value = trim($dateTimeValue->date);
+                            return \DateTime::createFromFormat('Y-m-d H:i:s', $value);
+                        }
+                    }
+                ]
+            ];
 			$findings = $collection->find([]);
 			foreach ($findings as $entry) {
 				$obj = clone $instance;
-				self::parseBson($obj, $entry);
+				self::parseBson($obj, $entry, null, $bindTypes);
 				array_push($entries, $obj);
 			}
 			return $entries;
@@ -64,16 +75,15 @@ namespace Svhq\MongoMigrations\Migrations {
 			return $collection->find((array) $filter);
 		}
 
-		protected static function parseBson(&$instance, $data, object $options = null, object $bindTypes = null):void{
-			parent::parseBson($instance, $data);
-			if(property_exists($instance->creation, 'date')){
-				$instance->creation = \DateTime::createFromFormat('Y-m-d H:i:s', trim($instance->creation->date));
-			}
-		}
+//		protected static function parseBson(&$instance, $data, object $options = null, object $bindTypes = null):void{
+//			parent::parseBson($instance, $data, $options, $bindTypes);
+////			if(property_exists($instance->creation, 'date')){
+////				$instance->creation = \DateTime::createFromFormat('Y-m-d H:i:s', trim($instance->creation->date));
+////			}
+//		}
 
 		public static function initiated():bool{
-            $instance = new MigrationLogEntry();
-			return MongoUtil::hasCollection($instance->getCollection());
+            return MongoUtil::hasCollection(MigrationLogEntry::getCollection()->getCollectionName());
 		}
 
 		public static function initiate(){
@@ -83,7 +93,11 @@ namespace Svhq\MongoMigrations\Migrations {
 
 
 		public static function getSource(): string {
-			return trim(Config::instance()->getMigrations('entries'));
+            $entries = Config::instance()->getMigrations('entries');
+            if(!$entries){
+                $entries = Config::instance()->getDefaults('migrations.entries');
+            }
+			return trim($entries);
 		}
 
 		/**
@@ -109,7 +123,7 @@ namespace Svhq\MongoMigrations\Migrations {
 					'date' => $this->creation->format('Y-m-d H:i:s')
 				];
 			}
-			if($this->_id instanceof ObjectId){
+			if(isset($this->_id) && ($this->_id instanceof ObjectId)){
 				$collection->updateOne(['_id' => $this->_id], ['$set' => $data]);
 				return;
 			}

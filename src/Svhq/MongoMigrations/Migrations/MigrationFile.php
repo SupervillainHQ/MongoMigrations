@@ -58,6 +58,7 @@ namespace Svhq\MongoMigrations\Migrations {
          * @return array
          */
 		static function listFiles():array{
+		    // Maybe use ResourceManager to abstract away local/remote fs-api
 			$migrationDir = MongoMigrationsCliApplication::migrationDir();
 			$files = array_diff(scandir($migrationDir), ['.', '..']);
 			$migrationFiles = [];

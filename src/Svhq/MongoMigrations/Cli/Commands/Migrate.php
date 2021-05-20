@@ -10,6 +10,8 @@ namespace Svhq\MongoMigrations\Cli\Commands {
 
 
     use Svhq\Core\Cli\CliCommand;
+    use Svhq\Core\Cli\Console;
+    use Svhq\Core\Cli\ExitCodes;
     use Svhq\MongoMigrations\Migrations\MigrationFile;
 	use Svhq\MongoMigrations\Migrations\MigrationLog;
 	use Svhq\MongoMigrations\MongoMigrationsCliApplication;
@@ -18,40 +20,33 @@ namespace Svhq\MongoMigrations\Cli\Commands {
 	class Migrate implements CliCommand {
 
 		function execute(): int {
-			if(!MigrationLog::initiated()){
-				$freshLogCollection = MigrationLog::initiate();
+            $forceCreate = !MigrationLog::initiated();
+            if($forceCreate){
+                MigrationLog::initiate();
 			}
 			$migrationFiles = MigrationFile::listFiles();
 			$migrationDir = MongoMigrationsCliApplication::migrationDir();
-			echo "running migrations from dir {$migrationDir}\n";
+			Console::instance()->log("running migrations from dir {$migrationDir}");
 
 			foreach ($migrationFiles as $migrationFile) {
 				if($migrationFile instanceof MigrationFile){
 					$op = new ExecuteMigration($migrationFile->collection());
 					// ExecuteMigration instances return false if the collection already exists. This will happen for all
 					// old files. Only new files will actually execute.
-					$created = null;
-					if($op->change() || isset($freshLogCollection)){
-						// If the migration returns true, the migration created a new collection, so we must add a log entry
-//						MigrationLog::createEntry($migrationFile->fileName(), $migrationFile->collection());
+					if(!$op->change() && !$forceCreate){
+						// If the collection was already created we just need to verify that the migration log entry also
+                        // exists
+                        if(MigrationLog::getEntry($migrationFile->fileName())){
+                            Console::instance()->log("skipped collection '{$migrationFile->collection()}' ({$migrationFile->fileName()})");
+                            continue;
+                        }
 					}
-					else{
-						// If the collection already exists, we just need to verify that the migration entry also exists
-						if(isset($freshLogCollection)){
-							$created = null;
-						}
-						else{
-							if($entry = MigrationLog::getEntry($migrationFile->fileName())){
-								echo "skipped collection '{$migrationFile->collection()}' ({$migrationFile->fileName()})\n";
-								continue;
-							}
-						}
-					}
-					MigrationLog::createEntry($migrationFile->fileName(), $migrationFile->collection(), $created);
-					echo "created collection '{$migrationFile->collection()}' ({$migrationFile->fileName()})\n";
+					// The ExecuteMigration operation created its collection, so we log that in our migration-log
+					MigrationLog::createEntry($migrationFile->fileName(), $migrationFile->collection());
+					Console::instance()->log("created collection '{$migrationFile->collection()}' ({$migrationFile->fileName()})");
 				}
 			}
-			return 0;
+			return ExitCodes::OK;
 		}
 	}
 }
