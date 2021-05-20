@@ -9,15 +9,17 @@
 namespace Svhq\MongoMigrations\Migrations {
 
 
-	use Svhq\MongoMigrations\MongoMigrationsCliApplication;
+    use Phalcon\Di;
+    use Svhq\Core\Resource\ResourceManager;
+    use Svhq\MongoMigrations\MongoMigrationsCliApplication;
 
 	class MigrationFile implements \JsonSerializable {
 
-		protected $filename;
-		protected $filePath;
+		protected string $filename;
+		protected ?string $filePath;
 
-		protected $collection;
-		private $when;
+		protected string $collection;
+		private \DateTime $when;
 
 
 		function __construct(string $collection = null, string $filePath = null) {
@@ -41,7 +43,8 @@ namespace Svhq\MongoMigrations\Migrations {
 			$filePath = "{$migrationDir}/{$fileName}.mson";
 
 			$buffer = $this->jsonSerialize();
-			file_put_contents($filePath, json_encode($buffer));
+			$resMan = Di::getDefault()->getResource($filePath);
+            $resMan->write(json_encode($buffer), true);
 		}
 
 		static function create(string $collection):MigrationFile{
@@ -50,9 +53,12 @@ namespace Svhq\MongoMigrations\Migrations {
 			return $instance;
 		}
 
-		static function listFiles(){
+        /**
+         * Returns a list of existing migration files
+         * @return array
+         */
+		static function listFiles():array{
 			$migrationDir = MongoMigrationsCliApplication::migrationDir();
-//			echo "Migrations in dir {$migrationDir}\n";
 			$files = array_diff(scandir($migrationDir), ['.', '..']);
 			$migrationFiles = [];
 			foreach ($files as $file) {
@@ -66,7 +72,6 @@ namespace Svhq\MongoMigrations\Migrations {
 						self::inflate($migrationFile, json_decode($contents));
 						$migrationFile->filename = $filename;
 						array_push($migrationFiles, $migrationFile);
-//						echo "{$file}\n";
 					}
 				}
 			}

@@ -2,6 +2,7 @@
 
 namespace Svhq\MongoMigrations\Cli\Util {
 
+    use Phalcon\Di;
     use Svhq\Core\Resource\ResourceManager;
 
     class MigrationsDirectoryUtil {
@@ -15,7 +16,7 @@ namespace Svhq\MongoMigrations\Cli\Util {
         }
 
         public function init():int{
-            $resMan = ResourceManager::resourceManager($this->path);
+            $resMan = Di::getDefault()->getResource($this->path);
 
             if($resMan->isDirectory()){
                 return self::EXISTS;

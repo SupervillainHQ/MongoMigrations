@@ -83,14 +83,13 @@ namespace Svhq\MongoMigrations\Migrations {
 
 
 		public static function getSource(): string {
-			$collectionName = trim(Config::instance()->getMigrations('entries'));
-			return $collectionName;
+			return trim(Config::instance()->getMigrations('entries'));
 		}
 
 		/**
 		 * @return \DateTime
 		 */
-		public function created() {
+		public function created():\DateTime{
 			return $this->creation;
 		}
 
@@ -112,11 +111,12 @@ namespace Svhq\MongoMigrations\Migrations {
 			}
 			if($this->_id instanceof ObjectId){
 				$collection->updateOne(['_id' => $this->_id], ['$set' => $data]);
+				return;
 			}
 			$result = $collection->insertOne($data);
 			$this->_id = $result->getInsertedId();
 			if($this->_id instanceof ObjectId){
-				$result;
+				return;
 			}
 			throw new \Exception("Failed to save");
 		}

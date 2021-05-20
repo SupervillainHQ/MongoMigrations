@@ -34,7 +34,8 @@
 		"namespaces": [],
 		"classes": [
 			"Svhq/Core/Dependencies/Debug",
-			"Svhq/Core/Dependencies/Mongo"
+			"Svhq/Core/Dependencies/Mongo",
+			"Svhq/Core/Dependencies/Resource"
 		]
 	},
 	"environment": {

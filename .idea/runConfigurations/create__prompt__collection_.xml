@@ -1,0 +1,5 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="create (prompt: collection)" type="PhpLocalRunConfigurationType" factoryName="PHP Console" path="$PROJECT_DIR$/bin/mm" scriptParameters="create --collection=$Prompt$">
+    <method v="2" />
+  </configuration>
+</component>

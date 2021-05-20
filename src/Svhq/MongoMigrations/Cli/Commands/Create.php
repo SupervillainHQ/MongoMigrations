@@ -10,6 +10,7 @@ namespace Svhq\MongoMigrations\Cli\Commands {
 
 
     use Svhq\Core\Cli\CliCommand;
+    use Svhq\Core\Cli\CliParser;
     use Svhq\MongoMigrations\Migrations\MigrationFile;
 
 	class Create implements CliCommand {
@@ -17,9 +18,15 @@ namespace Svhq\MongoMigrations\Cli\Commands {
 		/**
 		 * @var string
 		 */
-		private $collection;
+		private string $collection;
 
-		function __construct(string $collection) {
+		function __construct(string $collection = null) {
+		    if(is_null($collection)){
+                $collection = trim(CliParser::instance()->getArgumentValue('collection'));
+            }
+            if(is_null($collection)){
+                throw new \InvalidArgumentException("Required argument 'collection' missing");
+            }
 			$this->collection = $collection;
 		}
 
