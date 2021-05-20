@@ -5,24 +5,38 @@ namespace Svhq\MongoMigrations\Cli\Commands\SubCommands {
 
 
     use Svhq\Core\Cli\CliCommand;
+    use Svhq\Core\Cli\Console;
+    use Svhq\Core\Cli\ExitCodes;
     use Svhq\Core\Config\Config;
+    use Svhq\Core\Credentials\CredentialsStorage;
 
     class ConfigInfo implements CliCommand {
 
 		function execute(): int {
-			$config = Config::instance();
-			$migrationsInfo = $config->migrations;
-			echo "Paths:\n";
-			echo "  config path: {$config->realPath()}\n";
-			echo "  vendor path: {$config->vendorPath()}\n";
-			echo "  migrations path: {$migrationsInfo->path}\n";
-			echo "Database:\n";
-			echo "  database: {$config->database}\n";
-			return 0;
-		}
+            $migrationsInfo = Config::instance()->getDefaults('migrations');
+            $mongoInfo = Config::instance()->getMongo();
+            $credentialsList = CredentialsStorage::zone()->getCredentials('mongo');
 
-		function help() {
-			// TODO: Implement help() method.
+            $info = [
+		        'Paths' => [
+                    'config path' => Config::instance()->location(),
+                    'project root' => Config::instance()->projectRoot(),
+                    'vendor path' => Config::instance()->vendorPath('Svhq\\Core'),
+                ],
+                'Mongo' => [
+                    'migrations path' => $migrationsInfo->path,
+                    'migrations log' => $migrationsInfo->entries
+                ],
+                'Database' => [
+                    'name' => $mongoInfo->database
+                ]
+            ];
+            if($credentials = array_shift($credentialsList)){
+                $info['Database']['user'] = $credentials->user();
+            }
+
+            Console::export($info);
+			return ExitCodes::OK;
 		}
 	}
 }

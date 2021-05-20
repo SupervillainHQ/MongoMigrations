@@ -60,13 +60,9 @@ namespace Svhq\MongoMigrations\Cli\Commands {
             }
 
             foreach ($mods as $mod) {
-                Console::log($mod);
+                Console::instance()->log($mod);
 			}
 			return ExitCodes::OK;
-		}
-
-		function help() {
-			// TODO: Implement help() method.
 		}
 	}
 }

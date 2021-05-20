@@ -5,15 +5,13 @@ namespace Svhq\MongoMigrations\Cli\Commands\SubCommands {
 
 
     use Svhq\Core\Cli\CliCommand;
+    use Svhq\Core\Cli\ExitCodes;
 
     class ConfigTest implements CliCommand {
 
 		function execute(): int {
-			// TODO: Implement execute() method.
-		}
-
-		function help() {
-			// TODO: Implement help() method.
+		    // TODO: figure out what to test
+			return ExitCodes::OK;
 		}
 	}
 }

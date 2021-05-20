@@ -29,9 +29,5 @@ namespace Svhq\MongoMigrations\Cli\Commands {
 			$migration->saveAsMson();
 			return 0;
 		}
-
-		function help() {
-			echo "Mongo-migrations Create command help:\n";
-		}
 	}
 }

@@ -74,7 +74,7 @@ namespace Svhq\MongoMigrations {
                     $debug->log(\Phalcon\Logger::CRITICAL, "File: " . $e->getFile());
                     $debug->log(\Phalcon\Logger::CRITICAL, "Line: " . $e->getLine());
                     $debug->log(\Phalcon\Logger::CRITICAL, "Trace: " . $e->getTraceAsString());
-                    Console::log("Command failed. See log for details");
+                    Console::instance()->log("Command failed. See log for details");
                 });
             }
 
@@ -84,7 +84,7 @@ namespace Svhq\MongoMigrations {
                 $exitCode = $instance->evaluate($commandNamespaces);
             }
             catch (\Exception $exception){
-                Console::log("<red>Command evaluation failed. See log for details</red>");
+                Console::instance()->log("<red>Command evaluation failed. See log for details</red>");
                 $debug = $di->get("debug");
                 $debug->log(\Phalcon\Logger::CRITICAL, $exception->getMessage());
                 return ExitCodes::GENERIC_ERROR;
@@ -93,7 +93,7 @@ namespace Svhq\MongoMigrations {
                 return $exitCode;
             }
 
-            Console::log("<red>Command evaluated but did not return a valid exit-code</red>");
+            Console::instance()->log("<red>Command evaluated but did not return a valid exit-code</red>");
             return ExitCodes::GENERIC_ERROR;
 		}
 

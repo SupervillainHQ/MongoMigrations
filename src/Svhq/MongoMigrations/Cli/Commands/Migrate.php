@@ -53,9 +53,5 @@ namespace Svhq\MongoMigrations\Cli\Commands {
 			}
 			return 0;
 		}
-
-		function help() {
-			// TODO: Implement help() method.
-		}
 	}
 }

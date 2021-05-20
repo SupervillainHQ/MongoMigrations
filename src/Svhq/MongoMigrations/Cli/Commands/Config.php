@@ -4,8 +4,11 @@
 namespace Svhq\MongoMigrations\Cli\Commands {
 
 
-	use Svhq\MongoMigrations\Cli\CliCommand;
-	use Svhq\MongoMigrations\Cli\Commands\SubCommands\ConfigInfo;
+    use Svhq\Core\Cli\CliCommand;
+    use Svhq\Core\Cli\CliParser;
+    use Svhq\Core\Cli\Console;
+    use Svhq\Core\Cli\ExitCodes;
+    use Svhq\MongoMigrations\Cli\Commands\SubCommands\ConfigInfo;
 	use Svhq\MongoMigrations\Cli\Commands\SubCommands\ConfigTest;
 
 	class Config implements CliCommand {
@@ -16,31 +19,30 @@ namespace Svhq\MongoMigrations\Cli\Commands {
 		private $subCommand;
 
 		function __construct(string $subCommand = null) {
-			if(!is_null($subCommand)){
-				switch ($subCommand){
-					case 'test':
-					default:
-						$this->subCommand = new ConfigTest();
-						break;
-					case 'info':
-						$this->subCommand = new ConfigInfo();
-						break;
-				}
+			if(is_null($subCommand)){
+                $subCommand = CliParser::instance()->getCommand(1);
+            }
 
-			}
-		}
+            switch ($subCommand->value()){
+                case 'test':
+                default:
+                    $this->subCommand = new ConfigTest();
+                    break;
+                case 'info':
+                    $this->subCommand = new ConfigInfo();
+                    break;
+            }
+        }
 
 		function execute(): int {
 			if($this->subCommand instanceof CliCommand){
 				return $this->subCommand->execute();
 			}
-			echo "Config command. Sub commands:\n";
-			echo "  Config test\n";
-			return 0;
-		}
-
-		function help() {
-			echo "Mongo-migrations Config command help:\n";
+			Console::instance()
+                ->log("Config command. Sub commands:")
+                ->log("  info")
+                ->log("  test");
+			return ExitCodes::OK;
 		}
 	}
 }

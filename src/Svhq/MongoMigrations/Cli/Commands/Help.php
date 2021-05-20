@@ -29,8 +29,9 @@ namespace Svhq\MongoMigrations\Cli\Commands {
 		}
 
 		function help() {
-			Console::log("Mongo-migrations help:");
-			Console::log("  Main command:");
+			Console::instance()
+                ->log("Mongo-migrations help:")
+                ->log("  Main command:");
 		}
 	}
 }
