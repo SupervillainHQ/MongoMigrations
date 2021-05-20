@@ -11,11 +11,12 @@ namespace Svhq\MongoMigrations\Migrations {
 	use MongoDB\BSON\ObjectId;
     use Svhq\Core\Config\Config;
     use Svhq\Core\Mongo\Document;
+    use Svhq\MongoMigrations\Cli\Util\MongoUtil;
 
     class MigrationLogEntry extends Document {
-		public $collection;
-		public $name;
-		public $creation;
+		public string $collection;
+		public string $name;
+		public ?\DateTime $creation;
 
 
 		public static function createNew(string $name, string $collection, \DateTime $created = null):MigrationLogEntry{
@@ -63,7 +64,7 @@ namespace Svhq\MongoMigrations\Migrations {
 			return $collection->find((array) $filter);
 		}
 
-		protected static function parseBson(&$instance, \ArrayObject $data){
+		protected static function parseBson(&$instance, $data, object $options = null, object $bindTypes = null):void{
 			parent::parseBson($instance, $data);
 			if(property_exists($instance->creation, 'date')){
 				$instance->creation = \DateTime::createFromFormat('Y-m-d H:i:s', trim($instance->creation->date));
@@ -71,16 +72,18 @@ namespace Svhq\MongoMigrations\Migrations {
 		}
 
 		public static function initiated():bool{
-			return MigrationLogEntry::hasCollection();
+            $instance = new MigrationLogEntry();
+			return MongoUtil::hasCollection($instance->getCollection());
 		}
 
 		public static function initiate(){
-			return MigrationLogEntry::initCollection();
+            $instance = new MigrationLogEntry();
+		    return MongoUtil::initCollection($instance->getCollection());
 		}
 
 
 		public static function getSource(): string {
-			$collectionName = trim(Config::instance()->migrations->entries);
+			$collectionName = trim(Config::instance()->getMigrations('entries'));
 			return $collectionName;
 		}
 
