@@ -45,7 +45,7 @@ namespace Svhq\MongoMigrations {
 
             // TODO: check user-config and determine if we should change defaults
             $migrationDir = null;
-            $localPaths = Config::instance()->getConfig('local.paths');
+            $localPaths = Config::instance($instance->key())->getConfig('local.paths');
             foreach ($localPaths as $path) {
                 if($aPath = Config::instance()->absolutePath($path)){
                     $migrationDir = $aPath;
@@ -53,7 +53,7 @@ namespace Svhq\MongoMigrations {
                 }
             }
             if(is_null($migrationDir)){
-                $globalPaths = Config::instance()->getConfig('global.paths');
+                $globalPaths = Config::instance($instance->key())->getConfig('global.paths');
                 foreach ($globalPaths as $path) {
                     if($aPath = Config::instance()->absolutePath($path)){
                         $migrationDir = $aPath;
