@@ -20,7 +20,7 @@ if(false !== $vendorPos){
 $vendorPath = "{$projectPath}/vendor";
 include "{$vendorPath}/autoload.php";
 
-$fallbackConfig = realpath("{$pharPath}/../config/config.json");
+$fallbackConfig = realpath("{$pharPath}/../config/mm.json");
 $localConfig = "{$projectPath}/config/mm.json";
 $configPath = null;
 if(is_readable($fallbackConfig) && is_file($fallbackConfig)){
