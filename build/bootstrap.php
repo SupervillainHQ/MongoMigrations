@@ -9,44 +9,33 @@ use Svhq\MongoMigrations\MongoMigrationsCliApplication;
 
 $arguments = array_values($argv);
 
-// Get our file-system bearings
 $path = array_shift($arguments);
 $pharPath = dirname(realpath($path));
+
 $projectPath = dirname($pharPath);
-// avoid trying to include an autoload.php from inside the phar file
-if(false !== strpos($projectPath, '/vendor')){
-    $paths = explode('/', ltrim($projectPath, '/'));
-    $projectPath = '/';
-    while($path = array_shift($paths)){
-        if('vendor' == $path){
-            break;
-        }
-        $projectPath = str_replace('//', '/', "{$projectPath}/{$path}");
-    }
+$vendorPos = strpos($projectPath, 'vendor/');
+if(false !== $vendorPos){
+    $projectPath = rtrim(substr($projectPath, 0, $vendorPos), '/');
 }
 $vendorPath = "{$projectPath}/vendor";
+include "{$vendorPath}/autoload.php";
 
-// Require a config file path
-$configPath = "{$projectPath}/config/mm.json";
-if($cfgPath = array_shift($arguments)){
-    if(0 === strpos($cfgPath, '/')){
-        $cfgPath = realpath($cfgPath);
-    }
-    else{
-        $cfgPath = realpath("{$vendorPath}/{$cfgPath}");
-    }
+$fallbackConfig = realpath("{$pharPath}/../config/config.json");
+$localConfig = "{$projectPath}/config/mm.json";
+$configPath = null;
+if(is_readable($fallbackConfig) && is_file($fallbackConfig)){
+    $configPath = $fallbackConfig;
 }
-if(!$cfgPath){
-    $cfgPath = $configPath;
+if(is_readable($localConfig) && is_file($localConfig)){
+    $configPath = $localConfig;
 }
-$configPath = $cfgPath;
-#var_dump($argv);
-#echo "config-file: {$configPath}\n";
 
-if($autoloadPath = realpath("{$vendorPath}/autoload.php")){
-    include $autoloadPath;
-    $returnCode = MongoMigrationsCliApplication::run($configPath);
-    exit($returnCode);
+if(is_null($configPath)){
+    echo "Invalid config path\n";
+    echo "(fallback: {$fallbackConfig})\n";
+    echo "(local: {$localConfig})\n";
+    return 0;
 }
-echo "failed to load autoloader ('{$vendorPath}/autoload.php')";
+$returnCode = MongoMigrationsCliApplication::run($configPath);
+exit($returnCode);
 
