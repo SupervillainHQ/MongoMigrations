@@ -34,6 +34,8 @@ if(is_null($configPath)){
     echo "Invalid config path\n";
     echo "(fallback: {$fallbackConfig})\n";
     echo "(local: {$localConfig})\n";
+    echo "(project: {$projectPath})\n";
+    echo "(exec: {$pharPath})\n";
     return 0;
 }
 $returnCode = MongoMigrationsCliApplication::run($configPath);
