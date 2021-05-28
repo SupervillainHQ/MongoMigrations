@@ -13,6 +13,7 @@ namespace Svhq\MongoMigrations\Migrations {
     use Svhq\Core\Config\Config;
     use Svhq\Core\Mongo\Document;
     use Svhq\MongoMigrations\Cli\Util\MongoUtil;
+    use Svhq\MongoMigrations\MongoMigrationsCliApplication;
 
     class MigrationLogEntry extends Document {
 		public string $collection;
@@ -95,7 +96,7 @@ namespace Svhq\MongoMigrations\Migrations {
 		public static function getSource(): string {
             $entries = Config::instance()->getMigrations('entries');
             if(!$entries){
-                $entries = Config::instance()->getDefaults('migrations.entries');
+                $entries = Config::instance(MongoMigrationsCliApplication::instance()->key())->getDefaults('migrations.entries');
             }
 			return trim($entries);
 		}
