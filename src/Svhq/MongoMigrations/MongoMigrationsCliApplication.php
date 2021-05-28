@@ -68,8 +68,8 @@ namespace Svhq\MongoMigrations {
                 self::$overrideKey = 'MM';
                 Config::register(self::$overrideKey, $cfgOverride);
                 if($migrationOverrides = Config::instance(self::$overrideKey)->getDefaults('migrations')){
-                    self::$migrationDir = trim($migrationOverrides->path);
-                    self::$logCollection = trim($migrationOverrides->entries);
+                    self::$migrationDir = Config::instance()->absolutePath($migrationOverrides->path);
+                    self::$logCollection = Config::instance()->absolutePath($migrationOverrides->entries);
                 }
             }
             DependencyLoader::loadFromConfig($di);
