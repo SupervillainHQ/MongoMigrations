@@ -18,8 +18,9 @@ namespace Svhq\MongoMigrations {
 
     class MongoMigrationsCliApplication extends DistributedCliApplication {
 
-		private static $migrationDir;
-		private static $logCollection;
+        private static $overrideKey;
+        private static $migrationDir;
+        private static $logCollection;
 
 		static function migrationDir(){
 			return realpath(self::$migrationDir);
@@ -43,27 +44,33 @@ namespace Svhq\MongoMigrations {
             self::$migrationDir = $defaultMigrationDir;
             self::$logCollection = $defaultMigrationCollection;
 
-            // TODO: check user-config and determine if we should change defaults
-            $migrationDir = null;
+            // TODO: check user-config and determine if we should register an extra config that should override our default
+            //   mm-config
+            $cfgOverride = null;
             $localPaths = Config::instance($instance->key())->getConfig('local.paths');
             foreach ($localPaths as $path) {
                 if($aPath = Config::instance()->absolutePath($path)){
-                    $migrationDir = $aPath;
+                    $cfgOverride = $aPath;
                     break;
                 }
             }
-            if(is_null($migrationDir)){
+            if(is_null($cfgOverride)){
                 $globalPaths = Config::instance($instance->key())->getConfig('global.paths');
                 foreach ($globalPaths as $path) {
                     if($aPath = Config::instance()->absolutePath($path)){
-                        $migrationDir = $aPath;
+                        $cfgOverride = $aPath;
                         break;
                     }
                 }
             }
 
-            if($migrationDir){
-                self::$migrationDir = $migrationDir;
+            if($cfgOverride){
+                self::$overrideKey = 'MM';
+                Config::register(self::$overrideKey, $cfgOverride);
+                if($migrationOverrides = Config::instance(self::$overrideKey)->getDefaults('migrations')){
+                    self::$migrationDir = trim($migrationOverrides->path);
+                    self::$logCollection = trim($migrationOverrides->entries);
+                }
             }
             DependencyLoader::loadFromConfig($di);
 
@@ -104,6 +111,10 @@ namespace Svhq\MongoMigrations {
         protected function commandNamespaces(): array
         {
             return ['Svhq\\MongoMigrations\\Cli\\Commands'];
+        }
+
+        public function key():string{
+            return self::$overrideKey ?? basename(str_replace('\\', '/', static::class));
         }
     }
 }
