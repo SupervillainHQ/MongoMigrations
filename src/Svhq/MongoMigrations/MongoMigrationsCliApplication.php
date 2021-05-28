@@ -10,12 +10,13 @@ namespace Svhq\MongoMigrations {
 
 	use Phalcon\Di\FactoryDefault\Cli as CliDI;
     use Svhq\Core\Application\CliApplication;
+    use Svhq\Core\Application\DistributedCliApplication;
     use Svhq\Core\Cli\Console;
     use Svhq\Core\Cli\ExitCodes;
     use Svhq\Core\Config\Config;
     use Svhq\Core\System\DependencyLoader;
 
-    class MongoMigrationsCliApplication extends CliApplication {
+    class MongoMigrationsCliApplication extends DistributedCliApplication {
 
 		private static $migrationDir;
 		private static $logCollection;
@@ -30,35 +31,39 @@ namespace Svhq\MongoMigrations {
 
 		static function run(string $configFilePath): int{
             $di = new CliDi();
-            Config::loadFromPath($configFilePath);
+            $instance = self::instance();
 
-            $migrationDefaults = Config::instance()->getDefaults('migrations');
+            Config::register($instance->key(), $configFilePath);
+
+            self::registerConfigs($configFilePath);
+
+            $migrationDefaults = Config::instance($instance->key())->getDefaults('migrations');
             $defaultMigrationDir = trim($migrationDefaults->path);
             $defaultMigrationCollection = trim($migrationDefaults->entries);
             self::$migrationDir = $defaultMigrationDir;
             self::$logCollection = $defaultMigrationCollection;
 
-            // TODO: load user-config be able to determine user/project-sourcepaths
-            $userCfgPath = null;
+            // TODO: check user-config and determine if we should change defaults
+            $migrationDir = null;
             $localPaths = Config::instance()->getConfig('local.paths');
             foreach ($localPaths as $path) {
                 if($aPath = Config::instance()->absolutePath($path)){
-                    $userCfgPath = $aPath;
+                    $migrationDir = $aPath;
                     break;
                 }
             }
-            if(is_null($userCfgPath)){
+            if(is_null($migrationDir)){
                 $globalPaths = Config::instance()->getConfig('global.paths');
                 foreach ($globalPaths as $path) {
                     if($aPath = Config::instance()->absolutePath($path)){
-                        $userCfgPath = $aPath;
+                        $migrationDir = $aPath;
                         break;
                     }
                 }
             }
 
-            if($userCfgPath){
-                Config::loadFromPath($userCfgPath);
+            if($migrationDir){
+                self::$migrationDir = $migrationDir;
             }
             DependencyLoader::loadFromConfig($di);
 
@@ -78,7 +83,6 @@ namespace Svhq\MongoMigrations {
                 });
             }
 
-            $instance = self::instance();
             $commandNamespaces = $instance->commandNamespaces();
             try{
                 $exitCode = $instance->evaluate($commandNamespaces);
