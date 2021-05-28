@@ -30,6 +30,7 @@
 			"entries" : "mm_migration_log"
 		}
 	},
+	"defer" : true,
 	"dependencies": {
 		"namespaces": [],
 		"classes": [
