@@ -1,6 +1,7 @@
 {
 	"name": "supervillainhq-mongomigrations",
 	"version": "0.0.1",
+	"private": true,
 	"description": "SupervillainHQ Mongo Migrations",
 	"repository": "bitbucket.org:andkrup/mongomigrations.git",
 	"license": "UNLICENSED",
