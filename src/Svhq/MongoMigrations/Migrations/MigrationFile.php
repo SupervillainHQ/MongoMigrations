@@ -24,8 +24,8 @@ namespace Svhq\MongoMigrations\Migrations {
 
 
 		function __construct(string $collection, string $filePath = null) {
-            if(empty($this->collection)){
-                throw new \InvalidArgumentException();
+            if(empty(trim($collection))){
+                throw new \InvalidArgumentException("Invalid collection");
             }
             $this->collection = trim($collection);
             $this->filePath = $filePath;
