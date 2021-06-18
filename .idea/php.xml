@@ -73,6 +73,7 @@
       <path value="$PROJECT_DIR$/vendor/gettext/gettext" />
       <path value="$PROJECT_DIR$/vendor/gettext/languages" />
       <path value="$PROJECT_DIR$/vendor/supervillainhq/core" />
+      <path value="$PROJECT_DIR$/vendor/symfony/deprecation-contracts" />
     </include_path>
   </component>
   <component name="PhpInterpreters">

@@ -11,6 +11,8 @@ namespace Svhq\MongoMigrations\Cli\Commands {
 
     use Svhq\Core\Cli\CliCommand;
     use Svhq\Core\Cli\CliParser;
+    use Svhq\Core\Cli\Console;
+    use Svhq\Core\Cli\ExitCodes;
     use Svhq\MongoMigrations\Migrations\MigrationFile;
 
 	class Create implements CliCommand {
@@ -34,7 +36,8 @@ namespace Svhq\MongoMigrations\Cli\Commands {
 			// create new migration file for repository sharing
 			$migration = MigrationFile::create($this->collection);
 			$migration->saveAsMson();
-			return 0;
+			Console::instance()->log("Migration file {$migration->fileName()} created");
+			return ExitCodes::OK;
 		}
 	}
 }

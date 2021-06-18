@@ -10,6 +10,7 @@ namespace Svhq\MongoMigrations\Migrations {
 
 
     use Phalcon\Di;
+    use Svhq\Core\Resource\FileResource;
     use Svhq\Core\Resource\ResourceManager;
     use Svhq\MongoMigrations\MongoMigrationsCliApplication;
 
@@ -37,14 +38,17 @@ namespace Svhq\MongoMigrations\Migrations {
 			return $this->filename;
 		}
 
-		function saveAsMson(){
+        /**
+         * Save migration file to local path
+         */
+		function saveAsMson():void{
 			$migrationDir = MongoMigrationsCliApplication::migrationDir();
 			$fileName = "{$this->when->format('YmdHis')}-{$this->collection}";
 			$filePath = "{$migrationDir}/{$fileName}.mson";
 
 			$buffer = $this->jsonSerialize();
 			$resMan = Di::getDefault()->getResource($filePath);
-            $resMan->write(json_encode($buffer), true);
+            $resMan->write(json_encode($buffer));
 		}
 
 		static function create(string $collection):MigrationFile{
