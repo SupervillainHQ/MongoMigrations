@@ -83,17 +83,10 @@ namespace Svhq\MongoMigrations\Migrations {
 			$migrationFiles = [];
 			foreach ($files as $file) {
 				$ext = pathinfo($file, PATHINFO_EXTENSION);
-//				$filename = pathinfo($file, PATHINFO_FILENAME);
 				if($ext == 'mson'){
                     $migrationFilePath = realpath("{$migrationDir}/{$file}");
                     $migrationFile = MigrationFile::fromFile($migrationFilePath);
                     array_push($migrationFiles, $migrationFile);
-//                    if(is_file($migrationFilePath) && is_readable($migrationFilePath)){
-//						$contents = file_get_contents($migrationFilePath);
-//						self::inflate($migrationFile, json_decode($contents));
-//						$migrationFile->filename = $filename;
-//						array_push($migrationFiles, $migrationFile);
-//					}
 				}
 			}
 			return $migrationFiles;
