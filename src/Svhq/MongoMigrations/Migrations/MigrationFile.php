@@ -16,21 +16,17 @@ namespace Svhq\MongoMigrations\Migrations {
 
 	class MigrationFile implements \JsonSerializable {
 
-		protected string $filename;
+		protected string $fileName;
 		protected ?string $filePath;
 
 		protected string $collection;
 		private \DateTime $when;
 
 
-		function __construct(string $collection, string $filePath = null) {
-            if(empty(trim($collection))){
-                throw new \InvalidArgumentException("Invalid collection");
-            }
+		function __construct(string $collection = null, string $filePath = null) {
             $this->collection = trim($collection);
             $this->filePath = $filePath;
             $this->when = new \DateTime('now', new \DateTimeZone('UTC'));
-            $this->filename = "{$this->when->format('YmdHis')}-{$this->collection}";
         }
 
 
@@ -39,7 +35,13 @@ namespace Svhq\MongoMigrations\Migrations {
 		}
 
 		function fileName():string{
-			return $this->filename;
+		    if(!isset($this->fileName)){
+		        if(!isset($this->collection)){
+		            throw new \Exception("Unable to derive filename without collection");
+                }
+                $this->fileName = "{$this->when->format('YmdHis')}-{$this->collection}";
+            }
+			return $this->fileName;
 		}
 
         /**
@@ -47,8 +49,7 @@ namespace Svhq\MongoMigrations\Migrations {
          */
 		function saveAsMson():void{
 			$migrationDir = MongoMigrationsCliApplication::migrationDir();
-            $this->filename = "{$this->when->format('YmdHis')}-{$this->collection}";
-			$filePath = "{$migrationDir}/{$this->filename}.mson";
+			$filePath = "{$migrationDir}/{$this->fileName()}.mson";
 
 			$buffer = $this->jsonSerialize();
 			$resMan = Di::getDefault()->getResource($filePath);
@@ -60,11 +61,12 @@ namespace Svhq\MongoMigrations\Migrations {
 
 		static function fromFile(string $filePath):MigrationFile{
             if(is_file($filePath) && is_readable($filePath)){
-                $migrationFile = new MigrationFile('');
-                $filename = pathinfo($filePath, PATHINFO_FILENAME);
+                $migrationFile = new MigrationFile();
+                $fileName = pathinfo($filePath, PATHINFO_FILENAME);
                 $contents = file_get_contents($filePath);
                 self::inflate($migrationFile, json_decode($contents));
-                $migrationFile->filename = $filename;
+                $migrationFile->fileName = $fileName;
+                $migrationFile->filePath = $filePath;
                 return $migrationFile;
             }
             throw new \InvalidArgumentException("Invalid file path {$filePath}");
