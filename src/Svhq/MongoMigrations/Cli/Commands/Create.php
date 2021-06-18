@@ -34,7 +34,7 @@ namespace Svhq\MongoMigrations\Cli\Commands {
 
 		function execute(): int {
 			// create new migration file for repository sharing
-			$migration = MigrationFile::create($this->collection);
+			$migration = new MigrationFile(trim($this->collection));
 			$migration->saveAsMson();
 			Console::instance()->log("Migration file {$migration->fileName()} created");
 			return ExitCodes::OK;

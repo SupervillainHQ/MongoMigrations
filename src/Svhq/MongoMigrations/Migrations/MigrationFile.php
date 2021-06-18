@@ -23,12 +23,15 @@ namespace Svhq\MongoMigrations\Migrations {
 		private \DateTime $when;
 
 
-		function __construct(string $collection = null, string $filePath = null) {
-			$this->collection = trim($collection);
-			$this->filePath = $filePath;
-			$this->when = new \DateTime('now', new \DateTimeZone('UTC'));
+		function __construct(string $collection, string $filePath = null) {
+            if(empty($this->collection)){
+                throw new \InvalidArgumentException();
+            }
+            $this->collection = trim($collection);
+            $this->filePath = $filePath;
+            $this->when = new \DateTime('now', new \DateTimeZone('UTC'));
             $this->filename = "{$this->when->format('YmdHis')}-{$this->collection}";
-		}
+        }
 
 
 		function collection():string{
@@ -44,6 +47,7 @@ namespace Svhq\MongoMigrations\Migrations {
          */
 		function saveAsMson():void{
 			$migrationDir = MongoMigrationsCliApplication::migrationDir();
+            $this->filename = "{$this->when->format('YmdHis')}-{$this->collection}";
 			$filePath = "{$migrationDir}/{$this->filename}.mson";
 
 			$buffer = $this->jsonSerialize();
@@ -54,11 +58,17 @@ namespace Svhq\MongoMigrations\Migrations {
             $resMan->write(json_encode($buffer), true);
 		}
 
-		static function create(string $collection):MigrationFile{
-			$instance = new MigrationFile();
-			$instance->collection = trim($collection);
-			return $instance;
-		}
+		static function fromFile(string $filePath):MigrationFile{
+            if(is_file($filePath) && is_readable($filePath)){
+                $migrationFile = new MigrationFile('');
+                $filename = pathinfo($filePath, PATHINFO_FILENAME);
+                $contents = file_get_contents($filePath);
+                self::inflate($migrationFile, json_decode($contents));
+                $migrationFile->filename = $filename;
+                return $migrationFile;
+            }
+            throw new \InvalidArgumentException("Invalid file path {$filePath}");
+        }
 
         /**
          * Returns a list of existing migration files
@@ -71,16 +81,17 @@ namespace Svhq\MongoMigrations\Migrations {
 			$migrationFiles = [];
 			foreach ($files as $file) {
 				$ext = pathinfo($file, PATHINFO_EXTENSION);
-				$filename = pathinfo($file, PATHINFO_FILENAME);
+//				$filename = pathinfo($file, PATHINFO_FILENAME);
 				if($ext == 'mson'){
-					$migrationFile = new MigrationFile();
-					$migrationFilePath = realpath("{$migrationDir}/{$file}");
-					if(is_file($migrationFilePath) && is_readable($migrationFilePath)){
-						$contents = file_get_contents($migrationFilePath);
-						self::inflate($migrationFile, json_decode($contents));
-						$migrationFile->filename = $filename;
-						array_push($migrationFiles, $migrationFile);
-					}
+                    $migrationFilePath = realpath("{$migrationDir}/{$file}");
+                    $migrationFile = MigrationFile::fromFile($migrationFilePath);
+                    array_push($migrationFiles, $migrationFile);
+//                    if(is_file($migrationFilePath) && is_readable($migrationFilePath)){
+//						$contents = file_get_contents($migrationFilePath);
+//						self::inflate($migrationFile, json_decode($contents));
+//						$migrationFile->filename = $filename;
+//						array_push($migrationFiles, $migrationFile);
+//					}
 				}
 			}
 			return $migrationFiles;
