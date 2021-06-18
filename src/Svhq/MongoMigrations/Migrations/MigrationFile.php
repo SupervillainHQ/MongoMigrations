@@ -27,6 +27,7 @@ namespace Svhq\MongoMigrations\Migrations {
 			$this->collection = trim($collection);
 			$this->filePath = $filePath;
 			$this->when = new \DateTime('now', new \DateTimeZone('UTC'));
+            $this->filename = "{$this->when->format('YmdHis')}-{$this->collection}";
 		}
 
 
@@ -43,12 +44,14 @@ namespace Svhq\MongoMigrations\Migrations {
          */
 		function saveAsMson():void{
 			$migrationDir = MongoMigrationsCliApplication::migrationDir();
-			$fileName = "{$this->when->format('YmdHis')}-{$this->collection}";
-			$filePath = "{$migrationDir}/{$fileName}.mson";
+			$filePath = "{$migrationDir}/{$this->filename}.mson";
 
 			$buffer = $this->jsonSerialize();
 			$resMan = Di::getDefault()->getResource($filePath);
-            $resMan->write(json_encode($buffer));
+            /**
+             * @var ResourceManager
+             */
+            $resMan->write(json_encode($buffer), true);
 		}
 
 		static function create(string $collection):MigrationFile{
