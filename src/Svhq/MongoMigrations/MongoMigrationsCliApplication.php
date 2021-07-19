@@ -72,7 +72,7 @@ namespace Svhq\MongoMigrations {
                     self::$logCollection = trim($migrationOverrides->entries);
                 }
             }
-            DependencyLoader::loadFromConfig(Config::instance(self::$overrideKey), 'dependencies');
+            DependencyLoader::loadFromConfig(Config::instance($instance->key()), 'dependencies');
 
             if(!is_writable(self::$migrationDir) || !is_dir(self::$migrationDir)){
                 $path = self::$migrationDir;
