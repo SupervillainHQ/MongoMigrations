@@ -112,9 +112,5 @@ namespace Svhq\MongoMigrations {
         {
             return ['Svhq\\MongoMigrations\\Cli\\Commands'];
         }
-
-        public function key():string{
-            return self::$overrideKey ?? basename(str_replace('\\', '/', static::class));
-        }
     }
 }
