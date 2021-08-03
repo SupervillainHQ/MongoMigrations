@@ -76,20 +76,13 @@ namespace Svhq\MongoMigrations\Migrations {
 			return $collection->find((array) $filter);
 		}
 
-//		protected static function parseBson(&$instance, $data, object $options = null, object $bindTypes = null):void{
-//			parent::parseBson($instance, $data, $options, $bindTypes);
-////			if(property_exists($instance->creation, 'date')){
-////				$instance->creation = \DateTime::createFromFormat('Y-m-d H:i:s', trim($instance->creation->date));
-////			}
-//		}
-
 		public static function initiated():bool{
             return MongoUtil::hasCollection(MigrationLogEntry::getCollection()->getCollectionName());
 		}
 
 		public static function initiate(){
             $instance = new MigrationLogEntry();
-		    return MongoUtil::initCollection($instance->getCollection());
+		    return MongoUtil::initCollection($instance->getCollection()->getCollectionName());
 		}
 
 
