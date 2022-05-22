@@ -30,8 +30,17 @@ namespace Svhq\MongoMigrations\Cli\Commands {
 
 		function help() {
 			Console::instance()
-                ->log("Mongo-migrations help:")
-                ->log("  Main command:");
+                ->log("Mongo-migrations help.")
+                ->log("Syntax:")
+                ->log("  mm <sub-command>[ ..<options>]")
+                ->log("")
+                ->log("Sub-commands:")
+                ->log("  mm help")
+                ->log("  mm init")
+                ->log("  mm migrate")
+                ->log("  mm config")
+                ->log("  mm create")
+			;
 		}
 	}
 }
