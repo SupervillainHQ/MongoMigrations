@@ -74,6 +74,8 @@
       <path value="$PROJECT_DIR$/vendor/gettext/languages" />
       <path value="$PROJECT_DIR$/vendor/supervillainhq/core" />
       <path value="$PROJECT_DIR$/vendor/symfony/deprecation-contracts" />
+      <path value="$PROJECT_DIR$/vendor/nette/php-generator" />
+      <path value="$PROJECT_DIR$/vendor/nette/utils" />
     </include_path>
   </component>
   <component name="PhpInterpreters">

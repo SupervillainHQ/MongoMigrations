@@ -17,25 +17,26 @@ $vendorPos = strpos($projectPath, 'vendor/');
 if(false !== $vendorPos){
     $projectPath = rtrim(substr($projectPath, 0, $vendorPos), '/');
 }
-$vendorPath = "{$projectPath}/vendor";
+$vendorPath = realpath("{$projectPath}/vendor");
 include "{$vendorPath}/autoload.php";
 
-$fallbackConfig = realpath("{$pharPath}/../config/mm.json");
-$localConfig = "{$projectPath}/config/mm.json";
+#$fallbackConfig = realpath("{$pharPath}/../config/mm.json");
+$localConfig = realpath("{$projectPath}/mm.json");
 $configPath = null;
-if(is_readable($fallbackConfig) && is_file($fallbackConfig)){
-    $configPath = $fallbackConfig;
-}
+#if(is_readable($fallbackConfig) && is_file($fallbackConfig)){
+#    $configPath = $fallbackConfig;
+#}
 if(is_readable($localConfig) && is_file($localConfig)){
     $configPath = $localConfig;
 }
 
 if(is_null($configPath)){
     echo "Invalid config path\n";
-    echo "(fallback: {$fallbackConfig})\n";
+#    echo "(fallback: {$fallbackConfig})\n";
     echo "(local: {$localConfig})\n";
     echo "(project: {$projectPath})\n";
     echo "(exec: {$pharPath})\n";
+    echo "(vendor: {$vendorPath})\n";
     return 0;
 }
 $returnCode = MongoMigrationsCliApplication::run($configPath);
