@@ -38,6 +38,7 @@ namespace Svhq\MongoMigrations {
             Config::register($instance->key(), $mmConfigPath);
 
 			$projectPath = dirname($configFilePath);
+			$phLocation = \Phar::running();
             self::registerConfigs($projectPath);
 
             $migrationDefaults = Config::instance($instance->key())->getDefaults('migrations');
