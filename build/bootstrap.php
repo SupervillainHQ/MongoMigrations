@@ -13,7 +13,7 @@ $path = array_shift($arguments);
 $pharPath = dirname(realpath($path));
 
 $projectPath = dirname($pharPath);
-$vendorPos = strpos($projectPath, 'vendor/');
+$vendorPos = strpos($projectPath, '/vendor');
 if(false !== $vendorPos){
     $projectPath = rtrim(substr($projectPath, 0, $vendorPos), '/');
 }
