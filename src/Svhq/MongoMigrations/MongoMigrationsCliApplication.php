@@ -21,7 +21,6 @@ namespace Svhq\MongoMigrations {
         private static $overrideKey;
         private static $migrationDir;
         private static $logCollection;
-        private static $pharInfo;
 
 		static function migrationDir(){
 			return realpath(self::$migrationDir);
@@ -29,10 +28,6 @@ namespace Svhq\MongoMigrations {
 
 		static function logCollection():string{
 			return trim(self::$logCollection);
-		}
-
-		static function setBootInfo($info){
-			self::$pharInfo = $info;
 		}
 
 		static function run(string $configFilePath): int{
