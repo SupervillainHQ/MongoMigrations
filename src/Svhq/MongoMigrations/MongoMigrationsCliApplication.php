@@ -9,7 +9,6 @@
 namespace Svhq\MongoMigrations {
 
 	use Phalcon\Di\FactoryDefault\Cli as CliDI;
-    use Svhq\Core\Application\CliApplication;
     use Svhq\Core\Application\DistributedCliApplication;
     use Svhq\Core\Cli\Console;
     use Svhq\Core\Cli\ExitCodes;
@@ -34,7 +33,8 @@ namespace Svhq\MongoMigrations {
             $di = new CliDi();
             $instance = self::instance();
 
-			$mmConfigPath = "phar://mm.phar/mongomigrations.json";
+			$phAlias = self::$pharInfo['pharAlias'];
+			$mmConfigPath = "phar://{$phAlias}/mongomigrations.json";
             Config::register($instance->key(), $mmConfigPath);
 
 			$projectPath = dirname($configFilePath);

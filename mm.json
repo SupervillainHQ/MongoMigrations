@@ -1,4 +1,5 @@
 {
+	"description": "An app-config file, specific for testing how to customise mongo-migration features when executed as a composer package",
 	"defaults": {
 		"authorization": {
 			"file": "./auth.json"

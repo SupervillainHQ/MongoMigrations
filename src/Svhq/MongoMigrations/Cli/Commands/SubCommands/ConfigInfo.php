@@ -9,11 +9,11 @@ namespace Svhq\MongoMigrations\Cli\Commands\SubCommands {
     use Svhq\Core\Cli\ExitCodes;
     use Svhq\Core\Config\Config;
     use Svhq\Core\Credentials\CredentialsStorage;
+	use Svhq\MongoMigrations\MongoMigrationsCliApplication;
 
-    class ConfigInfo implements CliCommand {
+	class ConfigInfo implements CliCommand {
 
 		function execute(): int {
-            $migrationsInfo = Config::instance()->getDefaults('migrations');
             $mongoInfo = Config::instance()->getMongo();
             $credentialsList = CredentialsStorage::zone()->getCredentials('mongo');
 
@@ -24,8 +24,8 @@ namespace Svhq\MongoMigrations\Cli\Commands\SubCommands {
                     'vendor path' => Config::instance()->vendorPath('Svhq\\Core'),
                 ],
                 'Mongo' => [
-                    'migrations path' => $migrationsInfo->path ?? 'n/a',
-                    'migrations log' => $migrationsInfo->entries ?? 'n/a'
+                    'migrations path' => MongoMigrationsCliApplication::migrationDir() ?? 'n/a',
+                    'migrations log' => MongoMigrationsCliApplication::logCollection() ?? 'n/a'
                 ],
                 'Database' => [
                     'name' => $mongoInfo->database ?? 'n/a'

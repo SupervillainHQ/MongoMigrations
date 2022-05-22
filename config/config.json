@@ -1,8 +1,11 @@
 {
+	"description": "A generic framework config file for testing",
 	"auth": {
 		"path": "./config/auth.json"
 	},
-	"foo" : {
-		"bar" : "snafu"
+	"mongo": {
+		"database" : "MongoMigrations",
+		"host" : "127.0.0.1",
+		"port" : "27017"
 	}
 }
