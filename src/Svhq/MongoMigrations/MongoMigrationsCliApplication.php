@@ -34,7 +34,8 @@ namespace Svhq\MongoMigrations {
             $di = new CliDi();
             $instance = self::instance();
 
-            Config::register($instance->key(), $configFilePath);
+			$mmConfigPath = "phar://mm.phar/mongomigrations.json";
+            Config::register($instance->key(), $mmConfigPath);
 
             self::registerConfigs($configFilePath);
 

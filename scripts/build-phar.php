@@ -19,7 +19,6 @@ STUB;
 
 $phar = new Phar('bin/mm.phar');
 //$phar->buildFromDirectory('src/'); // TODO: currently not using packed source files :) This should obviously change if the phar should work when moved outside the project
-//$phar->addFile('build/config.php', 'config.php');
+$phar->addFile('config/mongomigrations.json', 'mongomigrations.json');
 $phar->addFile('build/bootstrap.php', 'bootstrap.php');
-//$phar->addFile('build/services.php', 'services.php');
 $phar->setStub($stub);
