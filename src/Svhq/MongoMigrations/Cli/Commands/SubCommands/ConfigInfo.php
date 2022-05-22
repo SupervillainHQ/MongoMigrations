@@ -24,11 +24,11 @@ namespace Svhq\MongoMigrations\Cli\Commands\SubCommands {
                     'vendor path' => Config::instance()->vendorPath('Svhq\\Core'),
                 ],
                 'Mongo' => [
-                    'migrations path' => $migrationsInfo->path,
-                    'migrations log' => $migrationsInfo->entries
+                    'migrations path' => $migrationsInfo->path ?? 'n/a',
+                    'migrations log' => $migrationsInfo->entries ?? 'n/a'
                 ],
                 'Database' => [
-                    'name' => $mongoInfo->database
+                    'name' => $mongoInfo->database ?? 'n/a'
                 ]
             ];
             if($credentials = array_shift($credentialsList)){

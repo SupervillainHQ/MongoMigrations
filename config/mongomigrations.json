@@ -1,7 +1,4 @@
 {
-	"auth": {
-		"path": "./config/auth.json"
-	},
 	"config": {
 		"local": {
 			"paths": [
@@ -17,16 +14,13 @@
 	},
 	"debug": {
 		"log": {
-			"path": "./log/mm.log",
+			"path": "./logs/mm.log",
 			"level": "DEBUG"
 		}
 	},
 	"defaults": {
-		"authorization" : {
-			"file" : "./auth.json"
-		},
 		"migrations" : {
-			"path" : "/opt/mongo-migrations/dev/tests/migrations",
+			"path" : "{PROJECT}/db/migrations",
 			"entries" : "mm_migration_log"
 		}
 	},

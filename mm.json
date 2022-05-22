@@ -1,0 +1,11 @@
+{
+	"defaults": {
+		"authorization": {
+			"file": "./auth.json"
+		},
+		"migrations": {
+			"path": "/opt/mongo-migrations/dev/tests/migrations",
+			"entries": "mm_migration_log"
+		}
+	}
+}

@@ -1,0 +1,8 @@
+{
+	"auth": {
+		"path": "./config/auth.json"
+	},
+	"foo" : {
+		"bar" : "snafu"
+	}
+}
