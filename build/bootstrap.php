@@ -28,6 +28,16 @@ if(is_readable($localConfigPath) && is_file($localConfigPath)){
     $configPath = $localConfigPath;
 }
 
+$bootInfo = [
+	'path' => Phar::running(),
+	'pharAlias' => "mm.phar",
+	'localConfig' => $localConfig,
+	'projectPath' => $projectPath,
+	'pharPath' => $pharPath,
+	'vendorPath' => $vendorPath,
+];
+MongoMigrationsCliApplication::setBootInfo($bootInfo);
+
 if(is_null($configPath)){
     echo "Invalid config path\n";
     echo "(local-path: {$localConfig})\n";
