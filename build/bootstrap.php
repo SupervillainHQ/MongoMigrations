@@ -17,23 +17,26 @@ $vendorPos = strpos($projectPath, 'vendor/');
 if(false !== $vendorPos){
     $projectPath = rtrim(substr($projectPath, 0, $vendorPos), '/');
 }
-$vendorPath = realpath("{$projectPath}/vendor");
+$vendorPath = "{$projectPath}/vendor";
 include "{$vendorPath}/autoload.php";
 
-#$fallbackConfig = realpath("{$pharPath}/../config/mm.json");
-$localConfig = realpath("{$projectPath}/mm.json");
+$fallbackConfig = "{$pharPath}/../config/mm.json";
+$fallbackConfigPath = realpath($fallbackConfig);
+$localConfig = "{$projectPath}/mm.json";
+$localConfigPath = realpath($localConfig);
 $configPath = null;
-#if(is_readable($fallbackConfig) && is_file($fallbackConfig)){
-#    $configPath = $fallbackConfig;
-#}
-if(is_readable($localConfig) && is_file($localConfig)){
-    $configPath = $localConfig;
+
+if(is_readable($fallbackConfigPath) && is_file($fallbackConfigPath)){
+    $configPath = $fallbackConfigPath;
+}
+if(is_readable($localConfigPath) && is_file($localConfigPath)){
+    $configPath = $localConfigPath;
 }
 
 if(is_null($configPath)){
     echo "Invalid config path\n";
-#    echo "(fallback: {$fallbackConfig})\n";
-    echo "(local: {$localConfig})\n";
+    echo "(fallback-path: {$fallbackConfig})\n";
+    echo "(local-path: {$localConfig})\n";
     echo "(project: {$projectPath})\n";
     echo "(exec: {$pharPath})\n";
     echo "(vendor: {$vendorPath})\n";
